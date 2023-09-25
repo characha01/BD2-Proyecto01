@@ -4,15 +4,18 @@ class Curso {
     private _descripcion: string;
     private _fechaInicio: Date;
     private _fechaFinal: Date;
-    private _imagen: string;
+    private _imagen: Number;
+    private _listaTemas: Array<Tema>;
+    
 
-    constructor(Codigo, Nombre, descripcion, fechaInicio, fechaFinal, imagen) {
-        this._Codigo = Codigo;
-        this._Nombre = Nombre;
-        this._descripcion = descripcion;
-        this._fechaInicio = fechaInicio;
-        this._fechaFinal = fechaFinal;
-        this._imagen = imagen
+    constructor(_Codigo, _Nombre, _descripcion, _fechaInicio, _fechaFinal, _imagen, _listaTemas) {
+        this._Codigo = _Codigo;
+        this._Nombre = _Nombre;
+        this._descripcion = _descripcion;
+        this._fechaInicio = _fechaInicio;
+        this._fechaFinal = _fechaFinal;
+        this._imagen = _imagen
+        this._listaTemas = _listaTemas;
     }
     
     public get Codigo(): string {
@@ -45,11 +48,17 @@ class Curso {
     public set fechaFinal(value: Date) {
         this._fechaFinal = value;
     }
-    public get imagen(): string {
+    public get imagen(): Number {
         return this._imagen;
     }
-    public set imagen(value: string) {
+    public set imagen(value: Number) {
         this._imagen = value;
+    }
+    public get listaTemas(): Array<Tema> {
+        return this._listaTemas;
+    }
+    public set listaTemas(value: Array<Tema>) {
+        this._listaTemas = value;
     }
     
 };
