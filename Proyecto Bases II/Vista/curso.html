@@ -7,6 +7,7 @@
     <script src="tabs.js" defer></script>
     <link href="cursoStyles.css" rel="stylesheet">
     <link href="temas.css" rel="stylesheet">
+    <link href="evaluaciones.css" rel="stylesheet">
     <title>Nombre de Curso</title>
 </head>
 <body>
@@ -56,7 +57,28 @@
         </div>
         <div id="evaluaciones" data-tab-content>
             <h1>Evaluaciones</h1>
-            <p>Evaluaciones</p>
+            <section class="body_evaluaciones">
+                <form id="evaluacion-form">
+                    <label for="titulo">Título de la Evaluación:</label>
+                    <input type="text" id="titulo" name="titulo" required><br><br>
+            
+                    <label for="fecha-inicio">Fecha de Inicio:</label>
+                    <input type="datetime-local" id="fecha-inicio" name="fecha-inicio" required><br><br>
+            
+                    <label for="fecha-fin">Fecha de Fin:</label>
+                    <input type="datetime-local" id="fecha-fin" name="fecha-fin" required><br><br>
+            
+                    <h2>Preguntas:</h2>
+            
+                    <div id="preguntas-container">
+                        <!-- AQUÍ SE AGREGAN LAS PREGUNTAS DE MANERA DINÁMICA -->
+                    </div>
+            
+                    <button type="button" id="agregar-pregunta">Agregar Pregunta</button><br><br>
+            
+                    <button type="submit">Crear Evaluación</button>
+                </form>
+            </section>
         </div>
     </div>
 </body>

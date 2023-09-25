@@ -32,3 +32,53 @@ var x = "hola\nesto\nes\nuna\nprueba";
 
 let parrafo = document.getElementById("descripcionDeCurso");
 parrafo.textContent = textoGrande;
+
+
+
+document.getElementById("agregar-pregunta").addEventListener("click", function() {
+    const preguntasContainer = document.getElementById("preguntas-container");
+
+    const nuevaPregunta = document.createElement("div");
+    nuevaPregunta.innerHTML = `
+        <label for="pregunta">Pregunta:</label>
+        <input type="text" name="pregunta" required><br>
+        <label for="opcion1">Opción 1:</label>
+        <input type="text" name="opcion1" required><br>
+        <label for="opcion2">Opción 2:</label>
+        <input type="text" name="opcion2" required><br>
+        <label for="opcion3">Opción 3:</label>
+        <input type="text" name="opcion3" required><br>
+        <label for="opcion4">Opción 4:</label>
+        <input type="text" name="opcion4" required><br><br>
+    `;
+
+    preguntasContainer.appendChild(nuevaPregunta);
+});
+
+document.getElementById("evaluacion-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    // AQUÍ SE CAPTURAN LOS DATOS.
+    // Ejemplo de cómo capturar los datos:
+    const titulo = document.getElementById("titulo").value;
+    const fechaInicio = document.getElementById("fecha-inicio").value;
+    const fechaFin = document.getElementById("fecha-fin").value;
+
+    const preguntas = [];
+    const preguntaElements = document.querySelectorAll("#preguntas-container div");
+    preguntaElements.forEach((preguntaElement) => {
+        const pregunta = preguntaElement.querySelector("input[name=pregunta]").value;
+        const opciones = [];
+        for (let i = 1; i <= 4; i++) {
+            const opcion = preguntaElement.querySelector(`input[name=opcion${i}]`).value;
+            opciones.push(opcion);
+        }
+        preguntas.push({ pregunta, opciones });
+    });
+
+    // ENVIAR DATOS AL SERVIDOR DE PROCESAMIENTO
+    console.log("Título:", titulo);
+    console.log("Fecha de Inicio:", fechaInicio);
+    console.log("Fecha de Fin:", fechaFin);
+    console.log("Preguntas:", preguntas);
+});
