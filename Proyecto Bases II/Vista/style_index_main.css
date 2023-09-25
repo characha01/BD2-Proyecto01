@@ -305,6 +305,7 @@ p {
     border-radius: 3px;
     color: #3b4148;
 }
+
 .form_field textarea {
     background-color: #3b4148;
     border: 0;
@@ -318,6 +319,18 @@ p {
     width: 100%;
     padding: 16px;
     padding: 1rem;
-    resize: vertical; /* Permite redimensionar verticalmente */
-    min-height: 150px; /* Altura mínima */
+    resize: vertical;
+    min-height: 150px; 
+}
+
+
+.image-container {
+    text-align: center;
+    height: 30px;
+}
+
+img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
 }
