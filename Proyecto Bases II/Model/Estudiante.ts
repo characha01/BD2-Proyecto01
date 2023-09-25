@@ -58,6 +58,7 @@ class Estudiante {
         this._foto = _foto;
         this._cursos = [];
     }
+    
 
     static encriptar(Npassword){
         const hashC = crypto.createHash('sha256');
