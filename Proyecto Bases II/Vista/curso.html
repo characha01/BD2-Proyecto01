@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    <script src="tabs.js" defer></script>
+    <link href="cursoStyles.css" rel="stylesheet">
+    <link href="temas.css" rel="stylesheet">
+    <title>Nombre de Curso</title>
+</head>
+<body>
+    <ul class="tabs">
+        <li data-tab-target="#curso" class="active tab">Nombre de Curso</li>
+        <li data-tab-target="#temas" class="tab">Temas</li>
+        <li data-tab-target="#evaluaciones" class="tab">Evaluaciones</li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="curso" data-tab-content class="active">
+            <h1>Nombre del Curso</h1>
+            <pre id="descripcionDeCurso">Descripcion del curso</pre>
+        </div>
+        <div id="temas" data-tab-content>
+            <h1>Temas</h1>
+            <section class="body_temas">
+                <div class="contenedor">
+                    <h2>Crear un tema</h2>
+                    <label for="texto">Texto:</label>
+                    <input type="text" id="texto" placeholder="Escribe aquí">
+            
+                    <label for="documentos">Documentos:</label>
+                    <input type="file" id="documentos" accept=".pdf, .docx, .txt">
+            
+                    <label for="videos">Videos:</label>
+                    <input type="file" id="videos" accept=".mp4, .avi, .mkv">
+            
+                    <label for="imagenes">Imágenes:</label>
+                    <input type="file" id="imagenes" accept=".jpg, .png, .gif">
+
+                    <button type="button">Aceptar</button>
+                </div>
+
+                <div class="contenedor">
+                    <label for="tema">Elegir tema:</label>
+                    <select id="tema">
+                        <!--OPCIONES DEL COMBO BOX VAN AQUI-->
+                    </select>
+            
+                </div>
+            
+                <div class="contenedor">
+                    <p>No disponible</p>
+                </div>
+            </section>
+        </div>
+        <div id="evaluaciones" data-tab-content>
+            <h1>Evaluaciones</h1>
+            <p>Evaluaciones</p>
+        </div>
+    </div>
+</body>
+</html>

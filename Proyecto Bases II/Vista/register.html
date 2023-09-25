@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="align">
+    <h1 class="text--center">Registrarse</h1>
+    <div class="grid">
+        <form action="#" method="post" class="form login">
+            <div class="form_field">
+                <label for="username">Nombre de usuario:</label>
+                <div class="form_input">
+                    <input type="text" id="username" name="username" required>
+                </div>
+            </div>
+            <div class="form_field">
+                <label for="password">Contraseña:</label>
+                <div class="form_input">
+                    <input type="password" id="password" name="password" required>
+                </div>
+            </div>
+            <div class="form_field">
+                <label for="salt">Salt:</label>
+                <div class="form_input">
+                    <input type="text" id="salt" name="salt" required>
+                </div>
+            </div>
+            <div class="form_field">
+                <label for="fullname">Nombre Completo:</label>
+                <div class="form_input">
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+            </div>
+            <div class="form_field">
+                <label for="birthdate">Fecha de Nacimiento:</label>
+                <div class="align">
+                    <input type="date" id="birthdate" name="birthdate" required>
+                </div>
+            </div>
+            <div class="form_field">
+                <label for="avatar">Foto o Avatar:</label>
+                <div class="align">
+                    <input type="file" id="avatar" name="avatar">
+                </div>
+            </div>
+            <div class="form_field">
+                <input type="submit" value="Crear cuenta">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

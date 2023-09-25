@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- Designined by CodingLab - youtube.com/codinglabyt -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Curso Registro | CodingLab</title>
+    <link rel="stylesheet" href="style_index_main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+   <body>
+    <script>
+        function enrutarCurso() {
+            location.href = "index_curso_registrar.html";
+        }
+        function enrutarMatricula() {
+            location.href = "matricular.html";
+        }
+    </script>
+    <div class="container">
+      <div class="title">Registrar Curso</div>
+      <form action="#">
+        <div class="button">
+          <input type="button" value="Matricular" onclick="enrutarMatricula()">
+        </div>
+        <div class="button">
+            <input type="button" value="Cursos" onclick="enrutarCurso()">
+        </div>
+        <div class="button">
+            <input type="button" value="Perfil">
+        </div>
+        <div class="button">
+            <input type="button" value="Mensajes">
+        </div>
+        <div class="button">
+            <input type="button" value="Buscar Usuarios">
+        </div>
+      </form>
+    </div>
+    <script src="prueba.js"></script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- Designined by CodingLab - youtube.com/codinglabyt -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Curso Registro | CodingLab</title>
+    <link rel="stylesheet" href="styles_curso_register.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+   <body>
+    <div class="container">
+      <div class="title">Registrar Curso</div>
+      <form action="#">
+        <div class="form_field">
+          <span class="details">Codigo del Curso</span>
+          <input type="text" placeholder="Inserte el código del curso" required>
+        </div>
+        <div class="form_field">
+          <span class="details">Nombre del Curso</span>
+          <input type="text" placeholder="Introduzca el nombre" required>
+        </div>
+        <div class="form_field">
+          <label class="form-label" for="descripcion">Descripción:</label>
+          <textarea id="descripcion" name="descripcion" rows="6" placeholder="Introduce tu descripción aquí"></textarea>
+        </div>
+        <div class="form_field">
+          <label for="fecha" class="details">Fecha Inicio:</label>
+            <input type="date" id="fecha" name="fecha" class="form-input" required>
+        </div>
+        <div class="form_field">
+            <label for="fecha" class="details">Fecha Fin:</label>
+            <input type="date" id="fecha" name="fecha" class="form-input" required>
+        </div>
+        <div class="form_field">
+          <label for="avatar">Foto del Curso:</label>
+          <input type="file" id="avatar" name="avatar">
+        </div>
+
+        <div class="button">
+          <input type="submit" value="Registrar">
+        </div>
+      </form>
+    </div>
+    <script src="prueba.js"></script>
+  </body>
+</html>

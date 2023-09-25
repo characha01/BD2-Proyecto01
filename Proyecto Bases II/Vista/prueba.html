@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Contenedores</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlaza tu archivo de estilos CSS -->
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Crear un tema</h2>
+        <label for="texto">Texto:</label>
+        <input type="text" id="texto" placeholder="Escriba aquí">
+
+        <label for="documentos">Documentos:</label>
+        <input type="file" id="documentos" accept=".pdf, .docx, .txt">
+
+        <label for="videos">Videos:</label>
+        <input type="file" id="videos" accept=".mp4, .avi, .mkv">
+
+        <label for="imagenes">Imágenes:</label>
+        <input type="file" id="imagenes" accept=".jpg, .png, .gif">
+    </div>
+
+    <div class="contenedor">
+        <label for="tema">Elegir tema:</label>
+        <select id="tema">
+            <!-- Puedes agregar opciones al combobox aquí -->
+        </select>
+
+        <!-- Repite los elementos del primer panel aquí si es necesario -->
+    </div>
+
+    <div class="contenedor no-disponible">
+        <p>No disponible</p>
+    </div>
+</body>
+</html>
+
+<style>
+    /* Establece estilos generales */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: space-around;
+        height: 100vh;
+    }
+
+    /* Estilos para los contenedores */
+    .contenedor {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        width: 30%;
+        margin: 10px;
+    }
+
+    /* Estilos para el contenedor "No disponible" */
+    .no-disponible {
+        background-color: #ccc;
+        color: #555;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        width: 30%;
+        margin: 10px;
+    }
+
+    /* Estilos para etiquetas y elementos de formulario */
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    /* Estilos para el título "Crear un tema" */
+    h2 {
+        color: #333;
+    }
+
+    /* Estilos para el título "Elegir tema" */
+    label[for="tema"] {
+        color: #333;
+    }
+
+</style>
