@@ -28,7 +28,7 @@ class Tema {
         this._listaVideos = value;
     }
 
-    constructor(_texto, _listaDocumentos, _listaImagenes, _listaVideos){
+    constructor(_texto: string, _listaDocumentos: Array<Number>, _listaImagenes: Array<Number>, _listaVideos: Array<Number>){
         this._texto = _texto;
         this._listaDocumentos = _listaDocumentos;
         this._listaImagenes = _listaImagenes;

@@ -1,93 +1,93 @@
+import * as crypto from 'crypto';
+
 class Estudiante {
-    private _Nombre: String;
-    public get Nombre(): String {
+    private _Nombre: string;
+    private _fechaNac: Date;
+    private _userName: string;
+    private _password: string;
+    private _foto: number;
+    private _cursos: Array<Curso>;
+    private _salt: string;
+
+    public get Nombre(): string {
         return this._Nombre;
     }
-    public set Nombre(value: String) {
+    public set Nombre(value: string) {
         this._Nombre = value;
     }
-    private _fechaNac: Date;
+
     public get fechaNac(): Date {
         return this._fechaNac;
     }
     public set fechaNac(value: Date) {
         this._fechaNac = value;
     }
-    private _userName: String;
-    public get userName(): String {
+
+    public get userName(): string {
         return this._userName;
     }
-    public set userName(value: String) {
+    public set userName(value: string) {
         this._userName = value;
     }
-    private _password: String;
-    public get password(): String {
+
+    public get password(): string {
         return this._password;
     }
-    public set password(value: String) {
+    public set password(value: string) {
         this._password = value;
     }
-    private _foto: Number;
-    public get foto(): Number {
+
+    public get foto(): number {
         return this._foto;
     }
-    public set foto(value: Number) {
+    public set foto(value: number) {
         this._foto = value;
     }
-    private _cursos: Array<Curso>;
+
     public get cursos(): Array<Curso> {
         return this._cursos;
     }
     public set cursos(value: Array<Curso>) {
         this._cursos = value;
     }
-    private _salt;
-    public get salt() {
-        return this._salt;
-    }
-    public set salt(value) {
-        this._salt = value;
-    }
 
-    constructor(_Nombre,_fechaNac, _userName, _password, _foto){
-        this._Nombre = _Nombre;
-        this._fechaNac = _fechaNac;
-        this._userName = _userName;
-        this.salt = crypto.randomBytes(16).toString('hex');
-        this._password = Estudiante.encriptar(_password);
-        this._foto = _foto;
+    constructor(Nombre: string, fechaNac: Date, userName: string, password: string, foto: number) {
+        this._Nombre = Nombre;
+        this._fechaNac = fechaNac;
+        this._userName = userName;
+        this._salt = crypto.randomBytes(16).toString('hex');
+        this._password = this.encriptar(password);
+        this._foto = foto;
         this._cursos = [];
     }
-    
 
-    static encriptar(Npassword){
+    public encriptar(Npassword: string) {
         const hashC = crypto.createHash('sha256');
-        hashC.update(Npassword + this.salt);
+        hashC.update(Npassword + this._salt);
         return hashC.digest('hex');
     }
 
-    cambiar_userName(nUser){
-        this.userName = nUser;
+    public cambiar_userName(nUser: string) {
+        this._userName = nUser;
     }
 
-    cambiar_password(nPassword){
-        
-        this.password = Estudiante.encriptar(nPassword);
+    public cambiar_password(nPassword: string) {
+        this._password = this.encriptar(nPassword);
     }
 
-    cambiar_fechaNac(nFecha){
-        this.fechaNac = nFecha;
+    public cambiar_fechaNac(nFecha: Date) {
+        this._fechaNac = nFecha;
     }
 
-    cambiar_foto(nFoto){
-        this.foto = nFoto;
+    public cambiar_foto(nFoto: number) {
+        this._foto = nFoto;
     }
 
-    matricularCurso(ncurso){
-        this.cursos.push(ncurso);
+    public matricularCurso(ncurso: Curso) {
+        this._cursos.push(ncurso);
     }
 
-    desmatricularCurso(ncurso){
-        this.cursos = this.cursos.filter(ele => ele != ncurso);
+    public desmatricularCurso(ncurso: Curso) {
+        this._cursos = this._cursos.filter(ele => ele !== ncurso);
     }
 }

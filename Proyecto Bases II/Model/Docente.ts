@@ -1,4 +1,7 @@
+import * as crypto from 'crypto';
+
 class Docente {
+    
     private _Nombre: String;
     public get Nombre(): String {
         return this._Nombre;
@@ -49,43 +52,42 @@ class Docente {
         this._salt = value;
     }
 
-    constructor(_Nombre,_fechaNac, _userName, _password, _foto){
+    constructor(_Nombre: string, _fechaNac: Date, _userName: string, _password: string, _foto: number) {
         this._Nombre = _Nombre;
         this._fechaNac = _fechaNac;
         this._userName = _userName;
-        this._password = Docente.encriptar(_password);
-        this.salt = crypto.randomBytes(16).toString('hex');
+        this._salt = crypto.randomBytes(16).toString('hex');
+        this._password = this.encriptar(_password);
         this._foto = _foto;
-        this.cursosDocente = [];
+        this._cursosDocente = [];
+    }
+    public cambiar_userName(nUser: string) {
+        this._userName = nUser;
     }
 
-    static encriptar(Npassword){
-        const hashC = crypto.createHash('sha256');
-        hashC.update(Npassword + this.salt);
-        return hashC.digest('hex');
+    public cambiar_password(nPassword: string) {
+        this._password = this.encriptar(nPassword);
     }
 
-    cambiar_userName(nUser){
-        this.userName = nUser;
+    public cambiar_fechaNac(nFecha: Date) {
+        this._fechaNac = nFecha;
     }
 
-    cambiar_passord(nPassword){
-        this.password = Docente.encriptar(nPassword);
+    public cambiar_foto(nFoto: number) {
+        this._foto = nFoto;
     }
 
-    cambiar_fechaNac(nFecha){
-        this.fechaNac = nFecha;
-    }
-
-    cambiar_foto(nFoto){
-        this.foto = nFoto;
-    }
-
-    agregarCurso(ncurso){
+    public agregarCurso(ncurso: Curso){
         this.cursosDocente.push(ncurso);
     }
 
-    quitarCurso(ncurso){
+    public quitarCurso(ncurso: Curso){
         this.cursosDocente = this.cursosDocente.filter(ele => ele != ncurso);
     }
+    public encriptar(Npassword: string) {
+        const hashC = crypto.createHash('sha256');
+        hashC.update(Npassword + this._salt);
+        return hashC.digest('hex');
+    }
+
 }

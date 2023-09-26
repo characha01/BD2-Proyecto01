@@ -8,7 +8,7 @@ class Curso {
     private _listaTemas: Array<Tema>;
     
 
-    constructor(_Codigo, _Nombre, _descripcion, _fechaInicio, _fechaFinal, _imagen, _listaTemas) {
+    constructor(_Codigo: string, _Nombre: string, _descripcion: string,  _fechaInicio: Date, _fechaFinal: Date, _imagen: Number, _listaTemas: Array<Tema>) {
         this._Codigo = _Codigo;
         this._Nombre = _Nombre;
         this._descripcion = _descripcion;
