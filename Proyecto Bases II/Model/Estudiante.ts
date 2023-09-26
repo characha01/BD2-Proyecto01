@@ -51,13 +51,13 @@ class Estudiante {
         this._cursos = value;
     }
 
-    constructor(Nombre: string, fechaNac: Date, userName: string, password: string, foto: number) {
-        this._Nombre = Nombre;
-        this._fechaNac = fechaNac;
-        this._userName = userName;
+    constructor(_Nombre: string, _fechaNac: Date, _userName: string, _password: string, _foto: number) {
+        this._Nombre = _Nombre;
+        this._fechaNac = _fechaNac;
+        this._userName = _userName;
         this._salt = crypto.randomBytes(16).toString('hex');
-        this._password = this.encriptar(password);
-        this._foto = foto;
+        this._password = this.encriptar(_password);
+        this._foto = _foto;
         this._cursos = [];
     }
 
@@ -91,3 +91,4 @@ class Estudiante {
         this._cursos = this._cursos.filter(ele => ele !== ncurso);
     }
 }
+export default Estudiante; // Exporta la clase Animal
