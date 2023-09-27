@@ -23,6 +23,8 @@ function register() {
     let avatar = document.getElementById("avatar").value; // Obtén el valor del campo
     if (controlador.registrar(fullname, birthdate, username, password, avatar)) {
         window.history.back();
+        location.href = "logIn.html";
+        console.log("holaaaaaaa");
     } else {
         alert("Campos de entrada incorrectos");
     }
