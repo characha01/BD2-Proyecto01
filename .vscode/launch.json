@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Open logIn.html",
-            "file": "/Users/gabrielmacpro/Documents/GitHub/BD2-Proyecto01/Proyecto Bases II/Vista/logIn.html"
+            "file": "/Users/gabrielmacpro/Documents/GitHub/BD2-Proyecto01/Proyecto Bases II/Vista/register.html"
         }
     ]
 }

@@ -9,7 +9,7 @@
 <body class="align">
     <h1 class="text--center">Registrarse</h1>
     <div class="grid">
-        <form action="#" method="post" class="form login">
+        <form action="/upload" method="post" class="form login" enctype="multipart/form-data">
             <div class="form_field">
                 <label for="username">Nombre de usuario:</label>
                 <div class="form_input">
@@ -42,18 +42,16 @@
             </div>
             <div class="form_field">
                 <label for="avatar">Foto o Avatar:</label>
-                <div class="align">
-                    <input type="file" id="avatar" name="avatar">
+                <div class="align" enctype="multipart/form-data">
+                    <input type="file" id="avatar" name="imagen" accept=".jpg, .png">
                 </div>
             </div>
             <div class="form_field">
-                <input type="button" value="Crear cuenta" onclick="register()">
+                <input type="submit" value="Crear cuenta">
             </div>
         </form>
     </div>
-    <script src="../Model/Estudiante.js"></script>
-    <script src="../Model/Docente.js"></script>
-    <script src="../Control/Controlador.js"></script>
-    <script src="index.js"></script>
+    <script>
+    </script>
 </body>
 </html>

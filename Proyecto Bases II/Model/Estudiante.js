@@ -35,3 +35,5 @@ class Estudiante {
         this.cursos = this.cursos.filter(ele => ele != ncurso);
     }
 }
+
+module.exports = Estudiante;

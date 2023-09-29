@@ -1,3 +1,5 @@
+const Estudiante = require('../Model/Estudiante.js');
+
 class Controller {
     constructor() {
         this._user = new Estudiante("", new Date(), "", "", -1, []);
@@ -25,3 +27,4 @@ class Controller {
         }
     }
 }
+module.exports = Controller;
