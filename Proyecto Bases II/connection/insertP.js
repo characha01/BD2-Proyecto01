@@ -2,7 +2,7 @@
 // #########################################################################
 // ########################   Redis   #############################
 // #########################################################################
-
+/*
 var redis = require('redis');
 const clientRedis = redis.createClient({ url: 'redis://127.0.0.1:6379' });
 const redisConnection = async () => {
@@ -42,7 +42,7 @@ async function mainR() {
       console.error('Error al obtener el valor de miClave:', err);
     }
 }
-
+*/
 //mainR();
 
 // #########################################################################
@@ -58,15 +58,15 @@ dbMongo.once('open', function () {
 
 // Create Schema
 const Schema = mongoose.Schema;
-const firstSchema = new Schema ({ userName : String , password : Number});
+const firstSchema = new Schema ({ id : Number , path : String});
 
 // Create Model
 const firstModel = mongoose.model("firstModel",firstSchema)
 
 // Insert function
-async function insertMongo(userName,password) {
+async function insertMongo(id,path) {
   try{
-    const newData = new firstModel({userName , password});
+    const newData = new firstModel({id , path});
     await newData.save();
     console.log('Dato insertado en MongoDB:', newData);
   }catch(error){
@@ -97,3 +97,6 @@ async function mainM(){
 }
 mainM();
 
+
+
+module.exports = insertMongo;

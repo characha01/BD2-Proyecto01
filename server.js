@@ -31,26 +31,22 @@ app.post('/upload', upload.single('imagen'), (req, res) => {
         return res.status(400).send('No se seleccionó ninguna imagen.');
     }
     // Aquí puedes realizar cualquier acción adicional, como guardar la ruta de la imagen en una base de datos
+
     return res.status(200).send('Imagen cargada y guardada exitosamente.');
 });
-app.post('/add', (req, res) => {
+app.post('/verify', (req, res) => {
     const username = req.body.login__username;
     const password = req.body.login__password;
 
     console.log(username + " " + password);
-
+    if (controlador.verificar(username, password)) {
+        res.redirect('index_main.html');
+    }
     // Perform any necessary actions with username and password
-    // For example, you can save them to a database
 
-    return res.status(200).send('Form submitted successfully.');
 });
 
 
 app.listen(port, () => {
     console.log(`Servidor en ejecución en http://localhost:${port}`);
 });
-
-//const formulario = new URLSearchParams(,);
-
-///Nombre = formulario.get('nombre')
-//Clave = formulario.get('clave')

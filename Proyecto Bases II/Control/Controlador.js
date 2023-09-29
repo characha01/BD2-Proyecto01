@@ -1,8 +1,10 @@
 const Estudiante = require('../Model/Estudiante.js');
+//const insertMongo = require('../connection/insertP.js');
 
 class Controller {
     constructor() {
         this._user = new Estudiante("", new Date(), "", "", -1, []);
+        this.contador=0;
     }
 
     get user() {
@@ -14,7 +16,7 @@ class Controller {
     }
 
     verificar(nombre, password) {
-        // Llama a la base de datos para autenticar el usuario
+        //insertRedis.
         return true; // Cambia esto según tu lógica de autenticación
     }
 
@@ -25,6 +27,11 @@ class Controller {
             // Llama a la base de datos para registrar el usuario
             return true;
         }
+    }
+    registrarImagen(path) {
+        //insertMongo(this.contador, path);
+        this.contador++;
+        return this.contador-=1
     }
 }
 module.exports = Controller;
