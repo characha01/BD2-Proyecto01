@@ -28,11 +28,18 @@ const upload = multer({ storage: storage });
 app.post('/upload', upload.single('imagen'), (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/register.html'));
     if (!req.file) {
-        return res.status(400).send('No se seleccionó ninguna imagen.');
+        
     }
-    // Aquí puedes realizar cualquier acción adicional, como guardar la ruta de la imagen en una base de datos
+    
+    const username = req.body.username;
+    const password = req.body.password;
+    const salt = req.body.salt;
+    const fullname = req.body.fullname;
+    const birthdate = req.body.birthdate;
+    const image = req.body.imagen;
+    const is_teacher = false;
 
-    return res.status(200).send('Imagen cargada y guardada exitosamente.');
+    controlador.registrar(username, password, salt, fullname, birthdate, image, is_teacher)
 });
 app.post('/verify', (req, res) => {
     const username = req.body.login__username;

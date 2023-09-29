@@ -20,11 +20,50 @@ class Controller {
         return true; // Cambia esto según tu lógica de autenticación
     }
 
-    registrar(_Nombre, _fechaNac, _userName, _password, _foto) {
-        if (_password.length < 8) {
+    registrar(username, password, salt, full_name, birthdate, picture, is_teacher) {
+        if (password.length < 8) {
             return false;
         } else {
-            // Llama a la base de datos para registrar el usuario
+            const { DocumentStore } = require('ravendb');
+
+            const store = new DocumentStore('http://localhost:8080', 'Usuarios');
+
+            store.initialize();
+
+            const max = {
+            username: username,
+            password: password,
+            salt: salt,
+            full_name: full_name,
+            birthdate: birthdate,
+            picture: picture,
+            is_teacher: is_teacher
+            };
+
+            async function guardarUsuario(usuario) {
+
+            const session = store.openSession();
+
+            try {
+
+                usuario['@metadata'] = {
+                '@collection': 'Usuarios', 
+                };
+
+                await session.store(usuario);
+
+                await session.saveChanges();
+
+                console.log('El objeto "usuario" se ha guardado con éxito en la colección "Usuarios".');
+            } catch (error) {
+                console.error('Error al guardar el objeto "usuario":', error);
+            } finally {
+                session.dispose();
+                store.dispose();
+            }
+            }
+
+            guardarUsuario(max);
             return true;
         }
     }
