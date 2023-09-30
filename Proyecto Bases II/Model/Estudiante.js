@@ -1,5 +1,6 @@
 class Estudiante {
-    constructor(Nombre,fechaNac, userName, password, foto, cursos){
+    constructor(id,Nombre,fechaNac, userName, password, foto, cursos){
+        this.id = id;
         this.Nombre = Nombre;
         this.fechaNac = fechaNac;
         this.userName = userName;
@@ -8,7 +9,9 @@ class Estudiante {
         this.cursos = cursos;
     }
 
-    
+    getId(){
+        return this.id;
+    }
 
     cambiar_userName(nUser){
         this.userName = nUser;

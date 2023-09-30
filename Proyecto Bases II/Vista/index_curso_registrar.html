@@ -10,14 +10,14 @@
    <body>
     <div class="container">
       <div class="title">Registrar Curso</div>
-      <form action="#">
+      <form action="/Curso">
         <div class="form_field">
           <span class="details">Codigo del Curso</span>
-          <input type="text" placeholder="Inserte el código del curso" required>
+          <input type="text" name = "Codigo" placeholder="Inserte el código del curso" required>
         </div>
         <div class="form_field">
           <span class="details">Nombre del Curso</span>
-          <input type="text" placeholder="Introduzca el nombre" required>
+          <input type="text" name = "Nombre" placeholder="Introduzca el nombre" required>
         </div>
         <div class="form_field">
           <label class="form-label" for="descripcion">Descripción:</label>
@@ -29,7 +29,7 @@
         </div>
         <div class="form_field">
             <label for="fecha" class="details">Fecha Fin:</label>
-            <input type="date" id="fecha" name="fecha" class="form-input" required>
+            <input type="date" id="fechaF" name="fechaF" class="form-input" required>
         </div>
         <div class="form_field">
           <label for="avatar">Foto del Curso:</label>

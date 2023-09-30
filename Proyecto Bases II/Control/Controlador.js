@@ -1,12 +1,86 @@
 const Estudiante = require('../Model/Estudiante.js');
 //const insertMongo = require('../connection/insertP.js');
+const mongoose = require('mongoose');
+const redis = require('redis');
+var cassandra = require('cassandra-driver');
+const { ObjectId } = require('mongodb');
+const Redis = require('ioredis');
+const client = new Redis();
+function conectarMongo(){
+	mongoose.connect('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.6');
+	var dbMongo = mongoose.connection;
+	dbMongo.on('error', console.error.bind(console, 'CONNECTION ERROR'));
+	dbMongo.once('open', function () {
+	console.log('Connected: Mongo');
+	});
+	return mongoose;   
+}
+
+function conectarRedis(){
+	const clientRedis = redis.createClient({ url: 'redis://127.0.0.1:6379' });
+	const redisConnection = async () => {
+	await clientRedis.connect()
+	clientRedis.on('error', (err) => {
+	console.error(`An error occurred with Redis: ${err}`)
+	})
+	console.log('Connected: Redis')
+	}
+	redisConnection(); 
+	return clientRedis;    
+}
+
+
+function conectarRaven(){
+	const { DocumentStore } = require('ravendb');
+	const store = new DocumentStore('http://localhost:8080', 'usuarios');
+	store.initialize();
+	const session = store.openSession();
+	return session;
+}
+
+function conectarCassandra(){
+    const clientCassandra = new cassandra.Client({
+    contactPoints: ['h1', 'h2'],
+    localDataCenter: 'datacenter1',
+    keyspace: 'test'
+    });
+    clientCassandra.connect(function(err, result){
+    console.log('Connected: Cassandra')
+    });
+    return clientCassandra;    
+}
+
+function getRedisValue(key) {
+    return new Promise((resolve, reject) => {
+      client.get(key, (error, value) => {
+        if (error) {
+          console.error(`Error al obtener el valor de la clave "${key}": ${error.message}`);
+          reject(error);
+        } else {
+          if (value === null) {
+            console.log(`La clave "${key}" no existe en Redis.`);
+            resolve(null); 
+          } else {
+            
+            resolve(value); 
+          }
+        }
+      });
+    });
+  }
 
 class Controller {
     constructor() {
         this._user = new Estudiante("", new Date(), "", "", -1, []);
         this.contador=0;
+        this.mongoose = conectarMongo();
+        this.dbRedis = conectarRedis();
+        this.dbCassandra = conectarCassandra();
+        this.dbRaven = conectarRaven();
     }
 
+    
+    
     get user() {
         return this._user;
     }
@@ -15,15 +89,88 @@ class Controller {
         this._user = value;
     }
 
-    verificar(nombre, password) {
+
+    async verificar_usuario(nombre, password){
+        
+        async function valid(nombre, password) {
+            try {
+              
+              const Value = await getRedisValue(nombre);
+  
+              if (Value !== null) {
+                if(Value === password){
+                  return true;
+                }else{
+                  return false;
+                }
+              } else {
+                console.log(`La clave "${keyToRetrieve}" no existe en Redis.`);
+              }
+            } catch (error) {
+              console.error(`Error en la función principal: ${error.message}`);
+            } 
+          }
+          valid(nombre, password);
+          
+    }
+    
+    loginUsuario(nombre, password) {
         //insertRedis.
+        
+              
+        this.dbRedis.set(nombre, password, (err, reply) => {
+        if (err) {
+            console.error('Error al insertar en Redis:', err);
+        } else {
+            console.log('Insertado en Redis:', reply);
+        }
+        });
+           
         return true; // Cambia esto según tu lógica de autenticación
     }
 
-    registrar(username, password, salt, full_name, birthdate, picture, is_teacher) {
+    async registrarUsuario (username, password, full_name, birthdate, path, is_teacher) {
         if (password.length < 8) {
             return false;
         } else {
+            this.loginUsuario(username,password);
+            const Schema = this.mongoose.Schema;
+            const Documentos = new Schema ({ruta : String});
+            const Documento = this.mongoose.model("Documento",Documentos);
+            async function insertMongo(path) {
+                try{
+                    const newData = new Documento({ruta : path});//mismo nombre del modelo
+                    await newData.save();
+                    console.log('Dato insertado en MongoDB:', newData);
+                }catch(error){
+                    console.error('Error al insertar dato en MongoDB:', error);
+                }
+            }
+            insertMongo(path);
+			let data = new ObjectId();
+            async function getMongo(path) {
+            try {
+                data = await Documento.findOne({ ruta: path }); // Filtra por la ruta
+                if (data) {
+                const idDelDocumento = data._id;
+                console.log('Datos obtenidos de MongoDB:', data._id);
+                } else {
+                console.log('Documento no encontrado en MongoDB');
+                }
+            } catch (error) {
+                console.error('Error al obtener datos de MongoDB:', error);
+            }
+            }
+            getMongo(path)
+                .then(() => {
+                    if (data) {
+                    const idDelDocumento = data._id;
+                    console.log('ID del documento:', idDelDocumento);
+                    }
+                });
+            getMongo(path);
+            console.log(path);
+
             const { DocumentStore } = require('ravendb');
 
             const store = new DocumentStore('http://localhost:8080', 'Usuarios');
@@ -33,10 +180,9 @@ class Controller {
             const max = {
             username: username,
             password: password,
-            salt: salt,
             full_name: full_name,
             birthdate: birthdate,
-            picture: picture,
+            picture: data._id.toString(),
             is_teacher: is_teacher
             };
 
@@ -64,13 +210,60 @@ class Controller {
             }
 
             guardarUsuario(max);
+
             return true;
         }
     }
-    registrarImagen(path) {
-        //insertMongo(this.contador, path);
-        this.contador++;
-        return this.contador-=1
-    }
+	
+	async registrarCurso(codigo, descripcion, fechaFinal, fechaInicio, nombre, path){
+        const Schema = this.mongoose.Schema;
+        const Documentos = new Schema ({ruta : String});
+        const Documento = this.mongoose.model("Documento",Documentos);
+        async function insertMongo(path) {
+            try{
+                const newData = new Documento({ruta : path});//mismo nombre del modelo
+                await newData.save();
+                console.log('Dato insertado en MongoDB:', newData);
+            }catch(error){
+                console.error('Error al insertar dato en MongoDB:', error);
+            }
+        }
+        insertMongo(path);
+        let data = new ObjectId();
+        async function getMongo(path) {
+        try {
+            data = await Documento.findOne({ ruta: path }); // Filtra por la ruta
+            if (data) {
+            const idDelDocumento = data._id;
+            console.log('Datos obtenidos de MongoDB:', data._id);
+            } else {
+            console.log('Documento no encontrado en MongoDB');
+            }
+        } catch (error) {
+            console.error('Error al obtener datos de MongoDB:', error);
+        }
+        }
+        getMongo(path)
+            .then(() => {
+                if (data) {
+                const idDelDocumento = data._id;
+                console.log('ID del documento:', idDelDocumento);
+                }
+            });
+        getMongo(path);
+
+		clientCassandra.execute('USE test');
+		const query = 'INSERT INTO curso (id, codigo, descripcion, fechafinal, fechainicio, idfoto, idprofesor, nombre) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)';
+  		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this.user.getId(), nombre];
+		clientCassandra.execute(query, params, { prepare: true }, function(err, result) {
+			if (err) {
+				console.error('Error al insertar datos:', err);
+			} else {
+				console.log('Datos insertados exitosamente');
+			}
+		});		
+	}
+
+
 }
 module.exports = Controller;

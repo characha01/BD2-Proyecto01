@@ -28,30 +28,49 @@ const upload = multer({ storage: storage });
 app.post('/upload', upload.single('imagen'), (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/register.html'));
     if (!req.file) {
-        
+        alert("Error");
     }
-    
+    else{
+    const rutaImagen = path.basename(req.file.path);
     const username = req.body.username;
     const password = req.body.password;
-    const salt = req.body.salt;
     const fullname = req.body.fullname;
     const birthdate = req.body.birthdate;
     const image = req.body.imagen;
     const is_teacher = false;
-
-    controlador.registrar(username, password, salt, fullname, birthdate, image, is_teacher)
+    console.log(rutaImagen);
+    controlador.registrarUsuario(username, password, fullname, birthdate, rutaImagen, is_teacher);
+    res.redirect('index.html');
+    }
 });
 app.post('/verify', (req, res) => {
     const username = req.body.login__username;
     const password = req.body.login__password;
 
     console.log(username + " " + password);
-    if (controlador.verificar(username, password)) {
+    console.log(controlador.verificar_usuario(username, password));
+    if (controlador.verificar_usuario(username, password)) {
         res.redirect('index_main.html');
     }
     // Perform any necessary actions with username and password
 
 });
+app.post('/Curso', (req, res) => {
+    const Codigo = req.body.Codigo;
+    const Nombre = req.body.Nombre;
+    const descripcion = req.body.descripcion;
+    const fecha = req.body.fecha;
+    const fechaF = req.body.fechaF;
+    const avatar = req.body.avatar;
+
+    console.log(username + " " + password);
+    if (controlador.registrarCurso(Codigo, descripcion, fechaF, fecha, Nombre, avatar)) {
+        res.redirect('index_main.html');
+    }
+    // Perform any necessary actions with username and password
+
+});
+
 
 
 app.listen(port, () => {
