@@ -10,7 +10,7 @@
    <body>
     <div class="container">
       <div class="title">Registrar Curso</div>
-      <form action="/Curso">
+      <form action="/curso" enctype="multipart/form-data" method="post">
         <div class="form_field">
           <span class="details">Codigo del Curso</span>
           <input type="text" name = "Codigo" placeholder="Inserte el código del curso" required>
@@ -33,14 +33,13 @@
         </div>
         <div class="form_field">
           <label for="avatar">Foto del Curso:</label>
-          <input type="file" id="avatar" name="avatar">
+          <input type="file" id="avatar" name="imagen" accept=".jpg, .png">
         </div>
 
-        <div class="button">
+        <div class="form_field">
           <input type="submit" value="Registrar">
         </div>
       </form>
     </div>
-    <script src="prueba.js"></script>
   </body>
 </html>

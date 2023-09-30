@@ -1,5 +1,5 @@
 class Estudiante {
-    constructor(id,Nombre,fechaNac, userName, password, foto, cursos){
+    constructor(id,Nombre,fechaNac, userName, password, foto, cursos, cursosDocente){
         this.id = id;
         this.Nombre = Nombre;
         this.fechaNac = fechaNac;
@@ -7,6 +7,7 @@ class Estudiante {
         this.password = (password);
         this.foto = foto;
         this.cursos = cursos;
+        this.cursosDocente = cursosDocente;
     }
 
     getId(){

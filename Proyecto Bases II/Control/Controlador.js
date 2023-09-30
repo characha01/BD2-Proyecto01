@@ -40,7 +40,7 @@ function conectarRaven(){
 
 function conectarCassandra(){
     const clientCassandra = new cassandra.Client({
-    contactPoints: ['h1', 'h2'],
+    contactPoints: ['localhost'],
     localDataCenter: 'datacenter1',
     keyspace: 'test'
     });
@@ -71,7 +71,7 @@ function getRedisValue(key) {
 
 class Controller {
     constructor() {
-        this._user = new Estudiante("", new Date(), "", "", -1, []);
+        this._user = new Estudiante("", new Date(), "", "", -1, [], []);
         this.contador=0;
         this.mongoose = conectarMongo();
         this.dbRedis = conectarRedis();
@@ -252,18 +252,18 @@ class Controller {
             });
         getMongo(path);
 
-		clientCassandra.execute('USE test');
+		this.dbCassandra.execute('USE test');
 		const query = 'INSERT INTO curso (id, codigo, descripcion, fechafinal, fechainicio, idfoto, idprofesor, nombre) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)';
   		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this.user.getId(), nombre];
-		clientCassandra.execute(query, params, { prepare: true }, function(err, result) {
+		this.dbCassandra.execute(query, params, { prepare: true }, function(err, result) {
 			if (err) {
 				console.error('Error al insertar datos:', err);
+                return false;
 			} else {
 				console.log('Datos insertados exitosamente');
+                return true;
 			}
 		});		
 	}
-
-
 }
 module.exports = Controller;

@@ -55,20 +55,25 @@ app.post('/verify', (req, res) => {
     // Perform any necessary actions with username and password
 
 });
-app.post('/Curso', (req, res) => {
-    const Codigo = req.body.Codigo;
-    const Nombre = req.body.Nombre;
-    const descripcion = req.body.descripcion;
-    const fecha = req.body.fecha;
-    const fechaF = req.body.fechaF;
-    const avatar = req.body.avatar;
-
-    console.log(username + " " + password);
-    if (controlador.registrarCurso(Codigo, descripcion, fechaF, fecha, Nombre, avatar)) {
-        res.redirect('index_main.html');
+app.post('/curso',upload.single('imagen'), (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/index_curso_registrar.html'));
+    if (!req.file) {
+        //alert("Error");
+        console.log('no funciona imagen');
     }
-    // Perform any necessary actions with username and password
-
+    else{
+        const codigo = req.body.Codigo;
+        const nombre = req.body.Nombre;
+        const descripcion = req.body.descripcion;
+        const fechaInicio = req.body.fecha;
+        const fechaFinal= req.body.fechaF;
+        const rutaImagen = path.basename(req.file.path);
+        
+        if (controlador.registrarCurso(codigo, descripcion, fechaFinal, fechaInicio, nombre, rutaImagen)) {
+            res.redirect('index_main.html');
+        }
+        // Perform any necessary actions with username and password
+    }
 });
 
 
