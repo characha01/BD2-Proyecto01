@@ -51,7 +51,7 @@ app.post('/verify', (req, res) => {
     console.log(controlador.verificar_usuario(username, password));
     if (controlador.verificar_usuario(username, password)) {
         res.redirect('index_main.html');
-        controlador.obtenerUsuario("max123");
+        controlador.obtenerUsuario(username);
     }
     // Perform any necessary actions with username and password
 
