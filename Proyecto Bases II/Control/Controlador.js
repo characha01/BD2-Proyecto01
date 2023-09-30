@@ -265,5 +265,38 @@ class Controller {
 			}
 		});		
 	}
+
+    async obtenerUsuario(username) {
+        try {
+            const usuario = await this.dbRaven.query({ collection: 'Usuarios' })
+            .whereEquals('username', username)
+            .firstOrNull();
+
+            if (!usuario) {
+            console.log(`No se encontró ningún usuario con el username '${username}'.`);
+            return null;
+            }
+
+            const password = usuario.password;
+            const full_name = usuario.full_name;
+            const salt = usuario.salt;
+            const foto = usuario.picture;
+            const birthdate = usuario.birthdate;
+
+            this._user.cambiar_password(password);
+
+
+            console.log(`Contraseña del usuario '${username}': '${this._user.getPassword()}'.`);
+            return user;
+        } catch (error) {
+            console.error('Error al obtener la contraseña del usuario:', error);
+            return null;
+        } finally {
+            this.dbRaven.dispose();
+            store.dispose();
+        }
+    }
+
+
 }
 module.exports = Controller;

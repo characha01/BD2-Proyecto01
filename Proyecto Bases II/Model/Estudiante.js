@@ -18,17 +18,60 @@ class Estudiante {
         this.userName = nUser;
     }
 
-    cambiar_password(nPassword){
-        
-        this.password = encriptar(nPassword);
+    getId() {
+        return this._id;
     }
 
-    cambiar_fechaNac(nFecha){
-        this.fechaNac = nFecha;
+    setId(value) {
+        this._id = value;
     }
 
-    cambiar_foto(nFoto){
-        this.foto = nFoto;
+    getNombre() {
+        return this._Nombre;
+    }
+
+    setNombre(value) {
+        this._Nombre = value;
+    }
+
+    getFechaNac() {
+        return this._fechaNac;
+    }
+
+    setFechaNac(value) {
+        this._fechaNac = value;
+    }
+
+    getUserName() {
+        return this._userName;
+    }
+
+    setUserName(value) {
+        this._userName = value;
+    }
+
+    getPassword() {
+        return this._password;
+    }
+
+    setPassword(value) {
+        this._password = value;
+    }
+
+    getFoto() {
+        return this._foto;
+    }
+
+    setFoto(value) {
+        this._foto = value;
+    }
+
+    getCursos() {
+        return this._cursos;
+    }
+
+    setCursos(value) {
+        this._cursos = value;
     }
 
     matricularCurso(ncurso){
