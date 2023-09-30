@@ -9,7 +9,7 @@
    </head>
    <body>
     <script>
-        function enrutarRegistrartCurso() {
+        function enrutarRegistrarCurso() {
             location.href = "index_curso_registrar.html";
         }
         function enrutarMatricula() {
@@ -17,6 +17,12 @@
         }
         function enrutarPerfil() {
             location.href = "edit_user_info.html";
+        }
+        function enrutarCursosDocente() {
+            //location.href = "edit_user_info.html";
+        }
+        function enrutarCursosMatriculados() {
+            //location.href = "edit_user_info.html";
         }
     </script>
     <div class="image-container">
@@ -28,13 +34,13 @@
           <input type="button" value="Matricular" onclick="enrutarMatricula()">
         </div>
         <div class="button">
-            <input type="button" value="Cursos Matriculados" onclick="enrutarCurso()">
+            <input type="button" value="Cursos Matriculados" onclick="">
         </div>
         <div class="button">
-          <input type="button" value="Registrar Curso" onclick="enrutarCurso()">
+          <input type="button" value="Registrar Curso" onclick="enrutarRegistrarCurso()">
         </div>
         <div class="button">
-          <input type="button" value="R" onclick="enrutarCurso()">
+          <input type="button" value="Cursos Docente" onclick="enrutarCursosDocente()">
         </div>
         <div class="button">
             <input type="button" value="Editar Perfil" onclick="enrutarPerfil()">

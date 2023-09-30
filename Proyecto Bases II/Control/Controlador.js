@@ -279,21 +279,23 @@ class Controller {
 
             const password = usuario.password;
             const full_name = usuario.full_name;
-            const salt = usuario.salt;
             const foto = usuario.picture;
             const birthdate = usuario.birthdate;
 
-            this._user.cambiar_password(password);
+            this._user.setPassword(password);
+            this._user.setFechaNac(birthdate);
+            this._user.setNombre(full_name);
+            this._user.setUserName(username);
+            this._user.setFoto(foto);
 
 
-            console.log(`Contraseña del usuario '${username}': '${this._user.getPassword()}'.`);
-            return user;
+
+            //console.log(`Contraseña del usuario '${username}': '${this._user.getPassword()}'.`);
+            
         } catch (error) {
             console.error('Error al obtener la contraseña del usuario:', error);
-            return null;
         } finally {
             this.dbRaven.dispose();
-            store.dispose();
         }
     }
 
