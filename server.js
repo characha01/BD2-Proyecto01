@@ -146,7 +146,7 @@ app.get('/api/cursos', async (req, res) => {
         listaCursosHTML += `<span class="popup-close-button" onclick="cerrarPopup()">&times;</span>`;
         listaCursosHTML += '<h2 class="popup-titulo">Nombre de Curso</h2>';
         listaCursosHTML += '<p class="popup-descripcion">Aquí va la descripción del curso.</p>';
-        listaCursosHTML += `<button class="matricular" onclick="matricularDesmatricular('${popupId}')">Matricular</button>`;
+        listaCursosHTML += `<button class="matricular" onclick="matricularDesmatricular(${popupId})">Matricular</button>`;
         listaCursosHTML += '</div>';
         listaCursosHTML += '</div>';
     });
