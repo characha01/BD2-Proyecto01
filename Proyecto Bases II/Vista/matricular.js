@@ -1,15 +1,21 @@
-function abrirPopup(nombre, descripcion) {
-    document.getElementById("popup-titulo").textContent = nombre;
-    document.getElementById("popup-descripcion").textContent = descripcion;
-    document.getElementById("popup").style.display = "block";
+function abrirPopup(popupId, nombre, descripcion) {
+    console.log('abrirPopup se llamó con ID:', popupId);
+    const popup = document.getElementById(`popup-${popupId}`);
+    const popupTitulo = document.getElementById(`popup-titulo-${popupId}`);
+    const popupDescripcion = document.getElementById(`popup-descripcion-${popupId}`);
+
+    popupTitulo.textContent = nombre;
+    popupDescripcion.textContent = descripcion;
+    popup.style.display = 'block';
 }
 
-function cerrarPopup() {
-    document.getElementById("popup").style.display = "none";
+function cerrarPopup(popupId) {
+    const popup = document.getElementById(`popup-${popupId}`);
+    popup.style.display = 'none';
 }
 
-function matricularDesmatricular() {
-    var boton = document.getElementById("matricular");
+function matricularDesmatricular(popupId) {
+    const boton = document.getElementById(`matricular-${popupId}`);
     if (boton.textContent === "Matricular") {
         boton.textContent = "Desmatricular";
         boton.style.backgroundColor = "#f00";
@@ -18,12 +24,3 @@ function matricularDesmatricular() {
         boton.style.backgroundColor = "#41ff8a";
     }
 }
-
-var botonesCurso = document.querySelectorAll(".curso");
-botonesCurso.forEach(function (boton) {
-    boton.addEventListener("click", function () {
-        var nombreCurso = boton.getAttribute("data-nombre");
-        var descripcionCurso = boton.getAttribute("data-descripcion");
-        abrirPopup(nombreCurso, descripcionCurso);
-    });
-});

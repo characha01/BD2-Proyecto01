@@ -10,26 +10,21 @@
     <div class="titulo">
         <h1>Matrícula de Cursos</h1>
     </div>
-    <div class="contenedor">
+    <div class="contenedor" id="cursos-container">
         <div class="scrollable-container">
             <!-- Botones de cursos -->
-            <button class="curso" data-nombre="Curso 1" data-descripcion="Descripción del Curso 1" id="1">Curso 1</button>
-            <button class="curso" data-nombre="Curso 2" data-descripcion="Descripción del Curso 2" id="2">Curso 2</button>
-            <button class="curso" data-nombre="Curso 3" data-descripcion="Descripción del Curso 3" id="3">Curso 3</button>
-            <button class="curso" data-nombre="Curso 4" data-descripcion="Descripción del Curso 4" id="4">Curso 4</button>
-            <button class="curso" data-nombre="Curso 5" data-descripcion="Descripción del Curso 5" id="5">Curso 5</button>
-            <button class="curso" data-nombre="Curso 6" data-descripcion="Descripción del Curso 6" id="6">Curso 6</button>
-        </div>
-    </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="popup-close-button" onclick="cerrarPopup()">&times;</span>
-            <h2 id="popup-titulo">Nombre de Curso</h2>
-            <p id="popup-descripcion">Aquí va la descripción del curso.</p>
-            <button id="matricular" onclick="matricularDesmatricular()">Matricular</button>
         </div>
     </div>
     <script src="matricular.js"></script>
+    <script>
+        fetch('/api/cursos')
+            .then(response => response.text())
+            .then(data => {
+                const listaCursos = document.getElementById('cursos-container');
+                listaCursos.innerHTML = data;
+            })
+            .catch(error => console.error('Error al cargar los cursos:', error));
+   </script>
 </body>
 </html>
 

@@ -1,5 +1,6 @@
 class Curso {
-    constructor(_Codigo, _Nombre, _descripcion,  _fechaInicio, _fechaFinal, _imagen, _listaTemas) {
+    constructor(_id, _Codigo, _Nombre, _descripcion,  _fechaInicio, _fechaFinal, _imagen, _listaTemas) {
+        this.id = _id;
         this._Codigo = _Codigo;
         this._Nombre = _Nombre;
         this._descripcion = _descripcion;

@@ -77,6 +77,7 @@ class Controller {
         this.dbRedis = conectarRedis();
         this.dbCassandra = conectarCassandra();
         this.dbRaven = conectarRaven();
+        this.Documentos = new this.mongoose.Schema ({ruta : String});
     }
 
     
@@ -134,9 +135,7 @@ class Controller {
             return false;
         } else {
             this.loginUsuario(username,password);
-            const Schema = this.mongoose.Schema;
-            const Documentos = new Schema ({ruta : String});
-            const Documento = this.mongoose.model("Documento",Documentos);
+            const Documento = this.mongoose.model("Documento",this.Documentos);
             async function insertMongo(path) {
                 try{
                     const newData = new Documento({ruta : path});//mismo nombre del modelo
@@ -216,9 +215,8 @@ class Controller {
     }
 	
 	async registrarCurso(codigo, descripcion, fechaFinal, fechaInicio, nombre, path){
-        const Schema = this.mongoose.Schema;
-        const Documentos = new Schema ({ruta : String});
-        const Documento = this.mongoose.model("Documento",Documentos);
+        
+        const Documento = this.mongoose.model("Documento",this.Documentos);
         async function insertMongo(path) {
             try{
                 const newData = new Documento({ruta : path});//mismo nombre del modelo
@@ -297,6 +295,17 @@ class Controller {
         } finally {
             this.dbRaven.dispose();
         }
+    }
+    async getCursos(){
+        const query = 'SELECT nombre FROM curso';
+        const params = [];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+            for (const row of result) {
+                listaCursos.push(row.nombre);
+            }
+        return listaCursos; 
     }
 
 
