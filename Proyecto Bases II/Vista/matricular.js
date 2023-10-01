@@ -1,11 +1,10 @@
 function abrirPopup(popupId, nombre, descripcion) {
-    console.log('abrirPopup se llamó con ID:', popupId);
-    const popup = document.getElementById(`popup-${popupId}`);
-    const popupTitulo = document.getElementById(`popup-titulo-${popupId}`);
-    const popupDescripcion = document.getElementById(`popup-descripcion-${popupId}`);
+    const popup = document.getElementById(`${popupId}`);
+    //const popupTitulo = document.getElementById(`popup-titulo-${popupId}`);
+    //const popupDescripcion = document.getElementById(`popup-descripcion-${popupId}`);
 
-    popupTitulo.textContent = nombre;
-    popupDescripcion.textContent = descripcion;
+    //popupTitulo.textContent = nombre;
+    //popupDescripcion.textContent = descripcion;
     popup.style.display = 'block';
 }
 
@@ -24,3 +23,14 @@ function matricularDesmatricular(popupId) {
         boton.style.backgroundColor = "#41ff8a";
     }
 }
+
+// Agrega un evento clic a cada botón de curso
+const botonesCurso = document.querySelectorAll('.curso');
+botonesCurso.forEach((boton, index) => {
+    boton.addEventListener('click', () => {
+        //const nombreCurso = boton.getAttribute('data-nombre');
+        //const descripcionCurso = boton.getAttribute('data-descripcion');
+        console.log(index+1);
+        abrirPopup(index+1, "nombreCurso", "descripcionCurso");
+    });
+});

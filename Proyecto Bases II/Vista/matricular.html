@@ -13,17 +13,27 @@
     <div class="contenedor" id="cursos-container">
         <div class="scrollable-container">
             <!-- Botones de cursos -->
+            <button class="curso" data-nombre="nombreCurso" id="1">nombreCurso</button>
+            <div id="1" class="popup">1
+                <div class="popup-content">`;
+                    <span class="popup-close-button" onclick="cerrarPopup()">&times;</span>
+                    <h2 class="popup-titulo">Nombre de Curso</h2>
+                    <p class="popup-descripcion">Aquí va la descripción del curso.</p>';
+                    <button class="matricular" onclick="matricularDesmatricular(1)">Matricular</button>
+                </div>
+            </div>
         </div>
     </div>
+    
     <script src="matricular.js"></script>
     <script>
-        fetch('/api/cursos')
-            .then(response => response.text())
-            .then(data => {
-                const listaCursos = document.getElementById('cursos-container');
-                listaCursos.innerHTML = data;
-            })
-            .catch(error => console.error('Error al cargar los cursos:', error));
+        //fetch('/api/cursos')
+        //    .then(response => response.text())
+        //    .then(data => {
+        //        const listaCursos = document.getElementById('cursos-container');
+        //        listaCursos.innerHTML = data;
+         //   })
+        //    .catch(error => console.error('Error al cargar los cursos:', error));
    </script>
 </body>
 </html>

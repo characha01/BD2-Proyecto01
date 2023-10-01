@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open logIn.html",
-            "file": "/Users/gabrielmacpro/Documents/GitHub/BD2-Proyecto01/Proyecto Bases II/Vista/register.html"
+            "name": "Open matricular.html",
+            "file": "/Users/gabrielsmac/Documents/GitHub/BD2-Proyecto01/Proyecto Bases II/Vista/matricular.html"
         }
     ]
 }
