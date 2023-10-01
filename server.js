@@ -142,9 +142,12 @@ app.get('/api/cursos', async (req, res) => {
         // Crea un botón para cada curso y agrega un atributo data con el nombre del curso
         listaCursosHTML += `<button class="curso" data-nombre="${nombreCurso}" onclick="abrirPopup('${popupId}', 'hola', 'hola')">${nombreCurso}</button>`;
         listaCursosHTML += `<div id="${popupId}" class="popup">`;
+        listaCursosHTML += `<div class="popup-content">`;
+        listaCursosHTML += `<span class="popup-close-button" onclick="cerrarPopup()">&times;</span>`;
         listaCursosHTML += '<h2 class="popup-titulo">Nombre de Curso</h2>';
         listaCursosHTML += '<p class="popup-descripcion">Aquí va la descripción del curso.</p>';
         listaCursosHTML += `<button class="matricular" onclick="matricularDesmatricular('${popupId}')">Matricular</button>`;
+        listaCursosHTML += '</div>';
         listaCursosHTML += '</div>';
     });
     
