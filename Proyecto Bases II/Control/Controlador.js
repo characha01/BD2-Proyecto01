@@ -635,6 +635,28 @@ async agregarCursoRedisDocente(usuario, curso) {
         return true;
       }
 
+    async getTemas() {
+        const { DocumentStore } = require('ravendb');
+        const store = new DocumentStore('http://localhost:8080', 'Usuarios');
+        store.initialize();
+
+        try {
+            const session = store.openSession();
+    
+            const nombresTemas = await session.query({ collection: 'Temas' })
+                .selectFields('texto')
+                .all();
+    
+            session.dispose();
+    
+            // res.render('cursoMatriculado.html', { temas: nombresTemas });
+            return nombreTemas;
+        } catch (error) {
+            console.error('Error al obtener los nombres de los temas:', error);
+            res.status(500).send('Error al obtener los nombres de los temas.');
+        }
+    }
+
     
 
 

@@ -352,12 +352,9 @@ app.post('/registrarTema', upload.fields([
 
 app.post('/guardar_evaluacion', async (req, res) => {
     const evaluacion = req.body.evaluacion;
-    const name = evaluacion[0]
-    console.log(name);
-    /*
+    const name = req.body.evaluacion['nombreEvaluacion'];
     try {
         const resultado = await controlador.guardar_evaluacionRedis(name, evaluacion);
-        
         if (resultado) {
             console.log('La evaluación se guardó con éxito.');
             res.sendStatus(200); // OK
@@ -369,27 +366,13 @@ app.post('/guardar_evaluacion', async (req, res) => {
         console.error('Error:', error);
         res.sendStatus(500); // Internal Server Error
     }
-    */
 });
 
 
 
 
 app.get('/cursoMatriculado', async (req, res) => {
-    try {
-        const session = store.openSession();
-
-        const nombresTemas = await session.query({ collection: 'Temas' })
-            .selectFields('texto')
-            .all();
-
-        session.dispose();
-
-        res.render('cursoMatriculado.html', { temas: nombresTemas });
-    } catch (error) {
-        console.error('Error al obtener los nombres de los temas:', error);
-        res.status(500).send('Error al obtener los nombres de los temas.');
-    }
+    const temas = await controlador.getTemas();
 });
 
 
