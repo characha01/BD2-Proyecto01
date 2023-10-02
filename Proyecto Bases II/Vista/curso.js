@@ -116,4 +116,4 @@ opciones.forEach((opcion) => {
     option.value = opcion.value;
     option.text = opcion.text;
     selectTema.appendChild(option);
-});
+}); 
