@@ -25,22 +25,25 @@
         <div id="temas" data-tab-content>
             <h1>Temas</h1>
             <section class="body_temas">
-                <div class="contenedor">
-                    <h2>Crear un tema</h2>
-                    <label for="texto">Texto:</label>
-                    <input type="text" id="texto" placeholder="Escribe aquí">
-            
-                    <label for="documentos">Documentos:</label>
-                    <input type="file" id="documentos" accept=".pdf, .docx, .txt">
-            
-                    <label for="videos">Videos:</label>
-                    <input type="file" id="videos" accept=".mp4, .avi, .mkv">
-            
-                    <label for="imagenes">Imágenes:</label>
-                    <input type="file" id="imagenes" accept=".jpg, .png, .gif">
 
-                    <button type="button">Aceptar</button>
-                </div>
+                <form action="/registrarTema" method="post">
+                    <div>
+                        <h2>Crear un tema</h2>
+                        <label for="texto">Texto:</label>
+                        <input type="text" id="texto" placeholder="Escribe aquí">
+                
+                        <label for="documentos">Documentos:</label>
+                        <input type="file" id="documentos" accept=".pdf, .docx, .txt">
+                
+                        <label for="videos">Videos:</label>
+                        <input type="file" id="videos" accept=".mp4, .avi, .mkv">
+                
+                        <label for="imagenes">Imágenes:</label>
+                        <input type="file" id="imagenes" accept=".jpg, .png, .gif">
+
+                        <button type="button">Aceptar</button>
+                    </div>
+                </form>
 
                 <div class="contenedor">
                     <label for="tema">Elegir tema:</label>

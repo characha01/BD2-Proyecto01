@@ -5,43 +5,43 @@ const store = new DocumentStore('http://localhost:8080', 'Usuarios');
 store.initialize();
 
 
-async function obtenerPasswordDeUsuario(username) {
-  const session = store.openSession();
+async function registrarTema(texto, documentos, video, imagen) {
+  const { DocumentStore } = require('ravendb');
+  const store = new DocumentStore('http://localhost:8080', 'Usuarios');
+  store.initialize();
 
-  try {
-    const usuario = await session.query({ collection: 'Usuarios' })
-      .whereEquals('username', username)
-      .firstOrNull();
+  const tema = {
+    texto: texto,
+    documentos: documentos,
+    videos: video,
+    imagenes: imagen
+  };
 
-    if (!usuario) {
-      console.log(`No se encontró ningún usuario con el username '${username}'.`);
-      return null;
-    }
+  async function guardarTema(tema) {
+      const session = store.openSession();
 
-    const password = usuario.password;
-    const full_name = usuario.full_name;
-    const salt = usuario.salt;
-    const foto = usuario.picture;
-    const birthdate = usuario.birthdate;
+      try {
+          tema['@metadata'] = {
+              '@collection': 'Temas', 
+          };
 
-    const user = new Estudiante(0, full_name, username, password, foto, "c", "cd");
+          await session.store(tema);
+          await session.saveChanges();
 
-
-    console.log(`Contraseña del usuario '${username}': '${foto}'.`);
-    return user;
-  } catch (error) {
-    console.error('Error al obtener la contraseña del usuario:', error);
-    return null;
-  } finally {
-    session.dispose();
-    store.dispose();
+          console.log('El objeto "tema" se ha guardado con éxito en la colección "Temas".');
+      } catch (error) {
+          console.error('Error al guardar el objeto "tema":', error);
+      } finally {
+          session.dispose();
+          store.dispose();
+      }
   }
+
+  // Pasa el objeto 'tema' como un solo argumento a 'guardarTema'
+  await guardarTema(tema);
+
+  return true;
 }
 
-async function main() {
-  const username = 'max123';
-  obtenerPasswordDeUsuario(username);
-}
 
-// Llama a la función principal
-main();
+registrarTema("prueba1", "documentoooo", "videooo", "imageeeen");

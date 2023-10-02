@@ -284,20 +284,19 @@ app.get('/cargarCurso', async (req, res) => {
 });
 
 
-app.post('/registrarTema', upload.single('imagen'), (req, res) => {
+app.post('/registrarTema', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/curso.html'));
     if (!req.file) {
         alert("Error");
     }
     else{
-    //const rutaImagen = path.basename(req.file.path);
-    const texto = req.body.texto;
-    const documento = req.body.documentos;
-    const video = req.body.videos;
-    const imagen = req.body.imagenes;
-    //console.log(rutaImagen);
-    controlador.registrarUsuario(texto, documento, video, imagen);
-    //res.redirect('index.html');
+
+        const texto = req.body.texto;
+        const documento = req.body.documentos;
+        const video = req.body.videos;
+        const imagen = req.body.imagenes;
+
+        controlador.registrarTema(texto, documento, video, imagen);
     }
 });
 

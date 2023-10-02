@@ -102,3 +102,18 @@ document.getElementById("evaluacion-form").addEventListener("submit", function(e
     console.log("Fecha de Fin:", fechaFin);
     console.log("Preguntas:", preguntas);
 });
+
+const selectTema = document.getElementById('tema');
+
+const opciones = [
+    { value: 'opcion1', text: 'Opción 1' },
+    { value: 'opcion2', text: 'Opción 2' },
+    { value: 'opcion3', text: 'Opción 3' },
+];
+
+opciones.forEach((opcion) => {
+    const option = document.createElement('option');
+    option.value = opcion.value;
+    option.text = opcion.text;
+    selectTema.appendChild(option);
+});
