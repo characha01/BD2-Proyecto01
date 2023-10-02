@@ -32,7 +32,21 @@ function mostrarInformacionCurso(idBotonCurso) {
     const descripcion = document.getElementById('popup-descripcion');
     const fechaInicio = document.getElementById('popup-fecha-inicio');
     const fechaFinal = document.getElementById('popup-fecha-final');
-    
+    const boolMatriculado = botonCurso.getAttribute('data-matriculado');
+
+    var botonMatricular = document.getElementById("matricular");
+    if (boolMatriculado === "true") {
+        botonMatricular.setAttribute("value", "Desmatricular");
+        botonMatricular.style.backgroundColor = "#f00";
+    } else {
+        botonMatricular.setAttribute("value", "Matricular");
+        botonMatricular.style.backgroundColor = "#41ff8a";
+    }
+
+    const idCurso = document.getElementById("idCurso");   
+    idCurso.setAttribute('value', botonCurso.getAttribute('data-idCurso'));
+
+    botonMatricular.setAttribute("onclick", `matricularDesmatricular(${idBotonCurso})`)
     titulo.textContent = botonCurso.getAttribute('data-nombre');
     codigo.textContent = botonCurso.getAttribute('data-codigo');
     profesor.textContent = botonCurso.getAttribute('data-profesor');
@@ -41,6 +55,18 @@ function mostrarInformacionCurso(idBotonCurso) {
     fechaFinal.textContent = botonCurso.getAttribute('data-fecha-final');
     
     popup.style.display = 'block'; // Mostrar la ventana emergente
+}
+
+
+function matricularCurso(){
+    fetch('/matricularCurso') // Route to fetch data from the server
+    .then(response => response.text())
+    .then(data => {
+        console.log(`Curso Matriculado:${data}`);
+    })
+    .catch(error => {
+        console.error('Error matriculando curso:', error);
+    });  
 }
 
 // Funci贸n para cerrar la ventana emergente
@@ -63,13 +89,19 @@ function agregarListeners(){
     })
 }
 
-function matricularDesmatricular() {
+function matricularDesmatricular(idBotonCurso) {
+    var botonCurso = document.getElementById(idBotonCurso);   
     var boton = document.getElementById("matricular");
-    if (boton.textContent === "Matricular") {
-        boton.textContent = "Desmatricular";
+    var matriculado = document.getElementById("matriculado");
+    if (boton.getAttribute("value") === "Matricular") {
+        botonCurso.setAttribute('data-matriculado', "true")
+        matriculado.setAttribute("value", botonCurso.getAttribute("data-matriculado"));
+        boton.setAttribute("value", "Desmatricular");
         boton.style.backgroundColor = "#f00";
     } else {
-        boton.textContent = "Matricular";
+        botonCurso.setAttribute('data-matriculado', "false")
+        matriculado.setAttribute("value", botonCurso.getAttribute("data-matriculado"))
+        boton.setAttribute("value", "Matricular");
         boton.style.backgroundColor = "#41ff8a";
     }
 }

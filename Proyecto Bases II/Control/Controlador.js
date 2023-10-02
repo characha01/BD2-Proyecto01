@@ -70,6 +70,20 @@ async function getRedisValue(key,index) {
     });
   }
 
+async function claveExiste(databaseNumber, clave) {
+    return new Promise((resolve, reject) => {
+        client.select(databaseNumber, () => {
+            client.exists(clave, (err, reply) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(reply === 1); // Resuelve `true` si existe, `false` si no existe
+                }
+            });
+        });
+    });
+  }
+
 class Controller {
     constructor() {
         this._user = new Estudiante("", new Date(), "", "", -1, [], []);
@@ -80,15 +94,90 @@ class Controller {
         this.dbRaven = conectarRaven();
         this.Documentos = new this.mongoose.Schema ({ruta : String});
     }
-    get user() {
+    getUser() {
         return this._user;
     }
 
     set user(value) {
         this._user = value;
     }
-
-
+    //Metodos para ingresar cursos matriculados por usuario
+    async agregarCursoMatriculado(usuario, curso) {
+        const validation = await claveExiste(0,usuario);
+        if (validation) {
+            const list = [curso];
+            return new Promise((resolve, reject) => {
+                client.select(3, () => {
+                    
+                    client.rpush(usuario, ...list, (err, result) => {
+                        if (err) {
+                            console.error('Error al agregar curso:', err);
+                            reject(err);
+                        } else {
+                            console.log('Curso agregado con éxito');
+                            resolve(true);
+                        }
+                    });
+                });
+            });
+        } else {
+            
+            console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+            return false; 
+        }
+      }
+      //Metodo para obtener la lista de cursos de un usuario 
+      async  getCursosMatriculados(usuario) {
+        const validation = await claveExiste(0,usuario);
+        if(validation){
+          return new Promise((resolve, reject) => {
+              client.select(3, () => {
+                  
+                  client.lrange(usuario, 0, -1, (err, result) => {
+                      if (err) {
+                          console.error('Error al obtener la lista de cursos:', err);
+                          reject(err);
+                      } else {
+                          console.log('Lista de cursos obtenida con éxito');
+                          resolve(result);
+                      }
+                  });
+              });
+          });
+        }else{
+          console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+          
+        }
+      }
+      //Metodo para eliminar curso matriculado de un usuario
+      async  eliminarCursoRedis(usuario, curso) {
+        const validation = await claveExiste(0, usuario);
+        if (validation) {
+          return new Promise((resolve, reject) => {
+            client.select(3, () => {
+              // Utiliza LREM para eliminar todos los elementos coincidentes en la lista
+              client.lrem(usuario, 0, curso, (err, result) => {
+                if (err) {
+                  console.error('Error al eliminar el curso:', err);
+                  reject(err);
+                } else {
+                  if (result > 0) {
+                    console.log(`Curso '${curso}' eliminado con éxito`);
+                    resolve(true);
+                  } else {
+                    console.log(`El curso '${curso}' no existe en la lista.`);
+                    resolve(false);
+                  }
+                }
+              });
+            });
+          });
+        } else {
+          console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+          return false;
+        }
+      }
+      //Metodo para verificar que el password sea correcto
     async  verificar_usuario(nombre, password) {
         async function valid(nombre, password) {
           try {
@@ -112,7 +201,7 @@ class Controller {
         const isMatch = await valid(nombre, password);
         return isMatch;
     }
-    
+    //Metodo para ingresar el usuario, password y slat a Redis
     async loginUsuario(nombre, password) {
         
         const saltRounds = 10;
@@ -300,14 +389,22 @@ class Controller {
         }
     }
     async getCursos(){
-        const query = 'SELECT nombre FROM curso';
+        const query = 'SELECT id, nombre, codigo, idprofesor, descripcion, fechainicio, fechaFinal FROM curso';
         const params = [];
         const listaCursos = [];
-        const curso = [];
+        var curso = []
         await this.dbCassandra.execute('USE test');
         const result = await this.dbCassandra.execute(query, params, { prepare: true });
             for (const row of result) {
-                listaCursos.push(row.nombre);
+                curso.push(row.id.toString());
+                curso.push(row.nombre);
+                curso.push(row.codigo);
+                //curso.push(row.idprofesor);
+                curso.push(row.descripcion);
+                curso.push(row.fechainicio.toString());
+                curso.push(row.fechafinal.toString());
+                listaCursos.push(curso);
+                curso = [];
             }
         return listaCursos; 
     }
@@ -329,7 +426,7 @@ class Controller {
         await this.dbCassandra.execute('USE test');
         const result = await this.dbCassandra.execute(query, params, { prepare: true });
         console.log(result.rows[0].nombre);
-        return result.nombre;
+        return result.rows[0].nombre;
     }
 
     async getCodigoCurso(id){
@@ -339,7 +436,7 @@ class Controller {
         await this.dbCassandra.execute('USE test');
         const result = await this.dbCassandra.execute(query, params, { prepare: true });
         console.log(result.rows[0].codigo);
-        return result.nombre;
+        return result.rows[0].codigo;
     }
 
     async getDescripcionCurso(id){

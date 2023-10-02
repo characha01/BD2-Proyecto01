@@ -194,13 +194,43 @@ app.get('/api/cursos', async (req, res) => {
 
 app.get('/cargarCursos', async (req, res) => {
     let temp = "";
+    const usuarioActual = controlador.getUser().getUserName();
     const listaCursos = await controlador.getCursos();
-    listaCursos.forEach((nombreCurso, index) =>{
-        temp += `<button class="boton-curso" data-nombre="${nombreCurso}"data-codigo="C001" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-descripcion="Descripción del Curso 1" data-fecha-inicio="01/10/2023" data-fecha-final="30/10/2023" id="${index}">${nombreCurso}</button>`;
+    const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
+    const listaResultados = [];
+    console.log(listaCursosMatriculados);
+
+    listaCursos.forEach((curso, index) =>{   
+        listaCursosMatriculados.forEach(cursoMatriculado =>{
+            if(curso[0]==cursoMatriculado){
+                curso.push('true');
+            }
+        });
+        curso.push('false');    
+    });
+
+    console.log(listaCursos);
+
+    listaCursos.forEach(async (nombreCurso, index) =>{   
+        temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}">${nombreCurso[1]}</button>`;
     })
     res.send(temp);
 });
 
+
+app.post('/matricularCurso', async (req, res) => {
+    const usuarioActual = controlador.getUser().getUserName();
+    console.log(usuarioActual);
+    const idCurso = req.body.idCurso;
+    const matriculado = req.body.matriculado;
+    if (matriculado == "false") {
+        controlador.eliminarCursoRedis(usuarioActual, idCurso);    
+    }
+    else {
+        controlador.agregarCursoMatriculado(usuarioActual, idCurso);
+    }
+    //res.send(idCurso);
+});
 
 
 app.post('/registrarTema', upload.single('imagen'), (req, res) => {
