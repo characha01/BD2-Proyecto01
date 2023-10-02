@@ -57,6 +57,27 @@ body {
     margin: 50px;
 }
 
+.submit-curso {
+    background-color: #2d9df8;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    /*
+    height: 70px;
+    width: auto;
+    */
+
+    width: 33.33%; 
+    max-width: none; 
+    height: 70px;
+    margin: 50px;
+}
+
 .popup {
     display: none;
     position: fixed;

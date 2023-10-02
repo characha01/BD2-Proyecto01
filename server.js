@@ -8,6 +8,8 @@ const port = 3000;
 const Controller = require('./Proyecto Bases II/Control/Controlador.js')
 const Singleton = require('./Proyecto Bases II/Control/Singleton.js');
 
+var idCursoActual;
+
 
 const controlador = Singleton.getInstance();
 
@@ -191,7 +193,7 @@ app.get('/api/cursos', async (req, res) => {
     res.send(listaCursosHTML);
     
 });
-
+// AGREGA BOTONES EN VISTA MATRICULAR
 app.get('/cargarCursos', async (req, res) => {
     let temp = "";
     const usuarioActual = controlador.getUser().getUserName();
@@ -218,9 +220,35 @@ app.get('/cargarCursos', async (req, res) => {
 });
 
 
+// AGREGA BOTONES EN VISTA CURSOS MATRICULADOS
+app.get('/cargarCursosMatriculados', async (req, res) => {
+    let temp = "";
+    const usuarioActual = controlador.getUser().getUserName();
+    const listaCursos = await controlador.getCursos();
+    const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
+    const listaResultados = [];
+
+    listaCursos.forEach((curso, index) =>{   
+        listaCursosMatriculados.forEach(cursoMatriculado =>{
+            if(curso[0]==cursoMatriculado){
+                curso.push('true');
+            }
+        });
+        curso.push('false');    
+    });
+
+
+    listaCursos.forEach(async (nombreCurso, index) =>{
+        if (nombreCurso[6] == "true"){
+            temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}"></input>`;
+        }   
+    })
+    res.send(temp);
+});
+
+
 app.post('/matricularCurso', async (req, res) => {
     const usuarioActual = controlador.getUser().getUserName();
-    console.log(usuarioActual);
     const idCurso = req.body.idCurso;
     const matriculado = req.body.matriculado;
     if (matriculado == "false") {
@@ -230,6 +258,29 @@ app.post('/matricularCurso', async (req, res) => {
         controlador.agregarCursoMatriculado(usuarioActual, idCurso);
     }
     //res.send(idCurso);
+});
+
+app.post('/verCurso', async (req, res) => {
+
+    const idCurso = req.body.idCurso;
+    console.log(idCurso);
+    //const matriculado = req.body.matriculado;
+    //if (matriculado == "false") {
+    //    controlador.eliminarCursoRedis(usuarioActual, idCurso);    
+   // }
+   // else {
+        //controlador.agregarCursoMatriculado(usuarioActual, idCurso);
+    //}
+    idCursoActual=idCurso;
+    res.redirect('curso.html');
+});
+
+
+
+// CARGA INFORMACION DE UN CURSO EN LA VISTA DE CURSO.html
+app.get('/cargarCurso', async (req, res) => {
+    const atributosCurso = await controlador.getCurso(idCursoActual); 
+    res.json(atributosCurso);
 });
 
 

@@ -1,3 +1,17 @@
+function cargarContenidoCursos() {
+    fetch('/cargarCurso') // Route to fetch data from the server
+    .then(response => response.text())
+    .then(data => {
+        const contenidoCursos = document.getElementById('contenedor-cursos');
+        contenidoCursos.innerHTML = data; // Update the div content
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+    console.log("LISTENERS")
+} 
+
+
 const tabs = document.querySelectorAll('[data-tab-target]')
 const tabContents = document.querySelectorAll('[data-tab-content]')
 

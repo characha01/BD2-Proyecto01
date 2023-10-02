@@ -344,7 +344,7 @@ class Controller {
 
 		this.dbCassandra.execute('USE test');
 		const query = 'INSERT INTO curso (id, codigo, descripcion, fechafinal, fechainicio, idfoto, idprofesor, nombre) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)';
-  		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this.user.getId(), nombre];
+  		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this._user.getId(), nombre];
 		this.dbCassandra.execute(query, params, { prepare: true }, function(err, result) {
 			if (err) {
 				console.error('Error al insertar datos:', err);
@@ -407,6 +407,23 @@ class Controller {
                 curso = [];
             }
         return listaCursos; 
+    }
+    async getCurso(idCurso){
+        const query = 'SELECT id, nombre, codigo, idprofesor, descripcion, fechainicio, fechaFinal FROM curso where id = ?';
+        const params = [idCurso];
+        const listaCurso = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+            for (const row of result) {
+                listaCurso.push(row.id.toString());
+                listaCurso.push(row.nombre);
+                listaCurso.push(row.codigo);
+                //curso.push(row.idprofesor);
+                listaCurso.push(row.descripcion);
+                listaCurso.push(row.fechainicio.toString());
+                listaCurso.push(row.fechafinal.toString());
+            }
+        return listaCurso; 
     }
 
     async getNombreCurso(id){

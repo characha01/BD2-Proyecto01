@@ -16,8 +16,6 @@ function cargarContenidoCursos() {
     console.log("LISTENERS")
 } 
 
-
-
 cargarContenidoCursos();
 
 // Funcion para mostrar la ventana emergente con informaci贸n del curso
