@@ -206,6 +206,58 @@ async agregarCursoRedisDocente(usuario, curso) {
     }
   }
 
+  async  eliminarCursoRedisDocente(usuario, curso) {
+    const validation = await claveExiste(0, usuario);
+    if (validation) {
+      return new Promise((resolve, reject) => {
+        client.select(4, () => {
+          
+          client.lrem(usuario, 0, curso, (err, result) => {
+            if (err) {
+              console.error('Error al eliminar el curso:', err);
+              reject(err);
+            } else {
+              if (result > 0) {
+                console.log(`Curso '${curso}' eliminado con éxito`);
+                resolve(true);
+              } else {
+                console.log(`El curso '${curso}' no existe en la lista.`);
+                resolve(false);
+              }
+            }
+          });
+        });
+      });
+    } else {
+      console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+      return false;
+    }
+  }
+
+  async  obtenerListaCursosRedisDocente(usuario) {
+    const validation = await claveExiste(0,usuario);
+    if(validation){
+      return new Promise((resolve, reject) => {
+          client.select(4, () => {
+              
+              client.lrange(usuario, 0, -1, (err, result) => {
+                  if (err) {
+                      console.error('Error al obtener la lista de cursos:', err);
+                      reject(err);
+                  } else {
+                      console.log('Lista de cursos obtenida con éxito');
+                      resolve(result);
+                  }
+              });
+          });
+      });
+    }else{
+      console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+      
+    }
+  }
+  
+
 
     
       //Metodo para verificar que el password sea correcto

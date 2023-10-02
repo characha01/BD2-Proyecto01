@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    
+    <link href="cursoStyles.css" rel="stylesheet">
+    <link href="temas.css" rel="stylesheet">
+    <link href="evaluaciones.css" rel="stylesheet">
+    <title></title>
+</head>
+<body>
+    <ul class="tabs">
+        <li data-tab-target="#curso" class="active tab">Nombre de Curso</li>
+        <li data-tab-target="#temas" class="tab">Temas</li>
+        <li data-tab-target="#evaluaciones" class="tab">Evaluaciones</li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="curso" data-tab-content class="active">
+            <h1 id="tituloNombreCurso"></h1>
+            <pre id="descripcionDeCurso"></pre>
+        </div>
+        
+        <div id="temas" data-tab-content>
+            <h1>Temas</h1>
+            <div class="temas-container">
+                <div class="temas-sidebar">
+                    <label for="temasComboBox">Elegir tema:</label>
+                    <select id="temasComboBox"></select>
+                </div>
+                <div class="temas-info">
+                    <div>
+                        <label for="temaTexto">Texto:</label>
+                        <p id="temaTexto"></p>
+                    </div>
+                    <div>
+                        <label for="temaDocumento">Documento:</label>
+                        <a href="#" id="temaDocumento" download>Descargar Documento</a>
+                    </div>
+                    <div>
+                        <label for="temaVideo">Video:</label>
+                        <a href="#" id="temaVideo" target="_blank">Ver Video</a>
+                    </div>
+                    <div>
+                        <label for="temaImagen">Imagen:</label>
+                        <img id="temaImagen" src="" alt="Imagen del Tema">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="evaluaciones" data-tab-content>
+            <h1>Evaluaciones</h1>
+            <section class="body_evaluaciones">
+                <div class="align">
+                        <div class="form-container">
+                            <label class="form-label" for="nombreEvaluacion">Nombre de la Evaluación:</label>
+                            <input class="form-input" type="text" id="nombreEvaluacion" name="nombreEvaluacion">
+
+                            <div id="preguntasContainer">
+                            <!-- Aquí se agregarán dinámicamente las preguntas y respuestas -->
+                            </div>
+
+                            <button class="form-button" id="agregarPregunta">Agregar Pregunta</button>
+                            <button class="form-button" id="guardarEvaluacion">Guardar Evaluación</button> 
+                        </div>
+                </div>  
+            </section>
+    <script src="curso.js"></script>
+    <script src="crear_evaluacion.js"></script>
+</body>
+</html>

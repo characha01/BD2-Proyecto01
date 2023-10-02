@@ -120,3 +120,36 @@ opciones.forEach((opcion) => {
     option.text = opcion.text;
     selectTema.appendChild(option);
 }); */
+
+
+const temasComboBox = document.getElementById('temasComboBox');
+const temaTexto = document.getElementById('temaTexto');
+const temaDocumento = document.getElementById('temaDocumento');
+const temaVideo = document.getElementById('temaVideo');
+const temaImagen = document.getElementById('temaImagen');
+
+const temas = [
+    { nombre: 'Tema 1', texto: 'Texto del Tema 1', documento: 'documento1.pdf', video: 'video1.mp4', imagen: 'imagen1.jpg' },
+    { nombre: 'Tema 2', texto: 'Texto del Tema 2', documento: 'documento2.pdf', video: 'video2.mp4', imagen: 'imagen2.jpg' },
+];
+
+temas.forEach((tema) => {
+    const option = document.createElement('option');
+    option.value = tema.nombre;
+    option.text = tema.nombre;
+    temasComboBox.appendChild(option);
+});
+
+function mostrarInformacionTema() {
+    const temaSeleccionado = temas.find((tema) => tema.nombre === temasComboBox.value);
+    if (temaSeleccionado) {
+        temaTexto.textContent = temaSeleccionado.texto;
+        temaDocumento.href = temaSeleccionado.documento;
+        temaVideo.href = temaSeleccionado.video;
+        temaImagen.src = temaSeleccionado.imagen;
+    }
+}
+
+temasComboBox.addEventListener('change', mostrarInformacionTema);
+
+mostrarInformacionTema();
