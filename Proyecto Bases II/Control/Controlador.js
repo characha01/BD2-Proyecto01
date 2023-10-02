@@ -5,6 +5,8 @@ const redis = require('redis');
 var cassandra = require('cassandra-driver');
 const { ObjectId } = require('mongodb');
 const Redis = require('ioredis');
+const bcrypt = require('bcrypt');
+
 const client = new Redis();
 function conectarMongo(){
 	mongoose.connect('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.6');
@@ -50,19 +52,18 @@ function conectarCassandra(){
     return clientCassandra;    
 }
 
-function getRedisValue(key) {
+async function getRedisValue(key,index) {
     return new Promise((resolve, reject) => {
-      client.get(key, (error, value) => {
+      client.lindex(key, index, (error, firstElement) => {
         if (error) {
-          console.error(`Error al obtener el valor de la clave "${key}": ${error.message}`);
+          console.error(`Error al obtener el primer elemento de la lista "${key}": ${error.message}`);
           reject(error);
         } else {
-          if (value === null) {
-            console.log(`La clave "${key}" no existe en Redis.`);
-            resolve(null); 
+          if (firstElement === null) {
+            console.log(`La lista "${key}" está vacía o no existe en Redis.`);
+            resolve(null);
           } else {
-            
-            resolve(value); 
+            resolve(firstElement);
           }
         }
       });
@@ -79,9 +80,6 @@ class Controller {
         this.dbRaven = conectarRaven();
         this.Documentos = new this.mongoose.Schema ({ruta : String});
     }
-
-    
-    
     get user() {
         return this._user;
     }
@@ -91,43 +89,48 @@ class Controller {
     }
 
 
-    async verificar_usuario(nombre, password){
-        
+    async  verificar_usuario(nombre, password) {
         async function valid(nombre, password) {
-            try {
-              
-              const Value = await getRedisValue(nombre);
-  
-              if (Value !== null) {
-                if(Value === password){
-                  return true;
-                }else{
-                  return false;
-                }
-              } else {
-                console.log(`La clave "${keyToRetrieve}" no existe en Redis.`);
-              }
-            } catch (error) {
-              console.error(`Error en la función principal: ${error.message}`);
-            } 
+          try {
+            const storedHash = await getRedisValue(nombre, 0);
+            
+            if (storedHash !== null) {
+             
+              const passwordMatch = await bcrypt.compare(password, storedHash);
+              console.log(passwordMatch);
+              return passwordMatch; 
+            } else {
+              console.log(`La clave "${nombre}" no existe en Redis.`);
+              return false; // La clave no existe, por lo que la autenticación falla
+            }
+          } catch (error) {
+            console.error(`Error en la función principal: ${error.message}`);
+            return false; // Manejar errores y devolver false en caso de error
           }
-          valid(nombre, password);
-          
+        }
+        
+        const isMatch = await valid(nombre, password);
+        return isMatch;
     }
     
-    loginUsuario(nombre, password) {
-        //insertRedis.
+    async loginUsuario(nombre, password) {
         
-              
-        this.dbRedis.set(nombre, password, (err, reply) => {
-        if (err) {
-            console.error('Error al insertar en Redis:', err);
-        } else {
-            console.log('Insertado en Redis:', reply);
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashPassword = await bcrypt.hash(password, salt);
+        const elementos = [];
+      
+        elementos.push(hashPassword);
+        elementos.push(salt);
+      
+        try {
+            const length = await client.rpush(nombre, ...elementos);
+            console.log(`Se agregaron ${length} elementos a la lista.`);
+            return true; 
+        } catch (error) {
+            console.error(`Error al agregar elementos a la lista: ${error.message}`);
+            return false; 
         }
-        });
-           
-        return true; // Cambia esto según tu lógica de autenticación
     }
 
     async registrarUsuario (username, password, full_name, birthdate, path, is_teacher) {
@@ -300,6 +303,7 @@ class Controller {
         const query = 'SELECT nombre FROM curso';
         const params = [];
         const listaCursos = [];
+        const curso = [];
         await this.dbCassandra.execute('USE test');
         const result = await this.dbCassandra.execute(query, params, { prepare: true });
             for (const row of result) {
@@ -307,6 +311,78 @@ class Controller {
             }
         return listaCursos; 
     }
+
+    async getNombreCurso(id){
+        const query = 'SELECT nombre FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].nombre);
+        return result.nombre;
+    }
+
+    async getNombreCurso(id){
+        const query = 'SELECT nombre FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].nombre);
+        return result.nombre;
+    }
+
+    async getCodigoCurso(id){
+        const query = 'SELECT codigo FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].codigo);
+        return result.nombre;
+    }
+
+    async getDescripcionCurso(id){
+        const query = 'SELECT descripcion FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].descripcion);
+        return result.nombre;
+    }
+
+    async getFechaInicioCurso(id){
+        const query = 'SELECT fechaInicio FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].fechainicio);
+        return result.nombre;
+    }
+
+    async getFechaFinalCurso(id){
+        const query = 'SELECT fechafinal FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].fechafinal);
+        return result.nombre;
+    }
+
+    async getProfesorCurso(id){
+        const query = 'SELECT idProfesor FROM curso where id = ?';
+        const params = [id];
+        const listaCursos = [];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        console.log(result.rows[0].idprofesor);
+        return result.nombre;
+    }
+
+    
 
 
 }

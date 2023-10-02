@@ -6,9 +6,10 @@ const bodyParser = require('body-parser'); // Import body-parser
 const app = express();
 const port = 3000;
 const Controller = require('./Proyecto Bases II/Control/Controlador.js')
+const Singleton = require('./Proyecto Bases II/Control/Singleton.js');
 
 
-const controlador = new Controller();
+const controlador = Singleton.getInstance();
 
 app.use(express.static(path.join(__dirname, 'Proyecto Bases II/Vista')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,9 +26,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Ruta para cargar la imagen
-app.post('/upload', upload.single('imagen'), (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/register.html'));
+
+app.get('/matricular', upload.single('imagen'), (req, res) => {
+    try{
+    console.log("MATRICULAR");
+    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/matricular.html'));
     if (!req.file) {
         alert("Error");
     }
@@ -42,6 +45,38 @@ app.post('/upload', upload.single('imagen'), (req, res) => {
     console.log(rutaImagen);
     controlador.registrarUsuario(username, password, fullname, birthdate, rutaImagen, is_teacher);
     res.redirect('index.html');
+    }
+    }
+    catch(err){
+        console.log(err);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+// Ruta para cargar la imagen
+app.post('/upload', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/matricular2.html'));
+    if (!req.file) {
+        alert("Error");
+    }
+    else{
+        const listaCursos = controlador.getCursos();
+        const output = document.querySelector('.scrollable-container');
+        let temp = "";
+        listaCursos.forEach(nombreCurso =>{
+            temp += `<button class="curso" data-nombre="${nombreCurso}"data-codigo="C001" data-profesor="Profesor 1" data-descripcion="Descripción del Curso 1" data-fecha-inicio="01/10/2023" data-fecha-final="30/10/2023" id="1">Curso 1</button>`;
+        })
+        cursos.innerHTML = temp;
+        res.redirect('matricular2.html');
     }
 });
 app.post('/verify', async(req, res) => {
@@ -137,7 +172,7 @@ app.get('/api/cursos', async (req, res) => {
     
     cursos.forEach((nombreCurso, index) => {
         // Generar un ID único para cada popup
-        const popupId = `popup-${index}`;
+        var popupId = index;
         
         // Crea un botón para cada curso y agrega un atributo data con el nombre del curso
         listaCursosHTML += `<button class="curso" data-nombre="${nombreCurso}" id="${popupId}">${nombreCurso}</button>`;
@@ -152,8 +187,39 @@ app.get('/api/cursos', async (req, res) => {
     });
     
     // Envía la lista de cursos HTML como respuesta al cliente
+    console.log(listaCursosHTML);
     res.send(listaCursosHTML);
+    
 });
+
+app.get('/cargarCursos', async (req, res) => {
+    let temp = "";
+    const listaCursos = await controlador.getCursos();
+    listaCursos.forEach((nombreCurso, index) =>{
+        temp += `<button class="boton-curso" data-nombre="${nombreCurso}"data-codigo="C001" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-descripcion="Descripción del Curso 1" data-fecha-inicio="01/10/2023" data-fecha-final="30/10/2023" id="${index}">${nombreCurso}</button>`;
+    })
+    res.send(temp);
+});
+
+
+
+app.post('/registrarTema', upload.single('imagen'), (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/curso.html'));
+    if (!req.file) {
+        alert("Error");
+    }
+    else{
+    //const rutaImagen = path.basename(req.file.path);
+    const texto = req.body.texto;
+    const documento = req.body.documentos;
+    const video = req.body.videos;
+    const imagen = req.body.imagenes;
+    //console.log(rutaImagen);
+    controlador.registrarUsuario(texto, documento, video, imagen);
+    //res.redirect('index.html');
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor en ejecución en http://localhost:${port}`);

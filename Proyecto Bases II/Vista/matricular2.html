@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles_matricular.css">
+    <title>Matrícula de Cursos</title>
+</head>
+<body id="matricularCursos">
+    <div class="titulo">
+        
+        
+    </div>
+    <div class="contenedor">
+        <div class="scrollable-container" id="contenedor-cursos">
+            <!-- Botones de cursos -->
+        </div>
+    </div>
+    <div id="popup" class="popup">
+        <div class="popup-content" >
+            <span class="popup-close-button" onclick="cerrarPopup()">&times;</span>
+            <h2 id="popup-titulo">Nombre de Curso</h2>
+            <p><strong>Código de Curso:</strong> <span id="popup-codigo"></span></p>
+            <p><strong>Nombre del Profesor:</strong> <span id="popup-profesor"></span></p>
+            <p><strong>Descripción:</strong> <span id="popup-descripcion"></span></p>
+            <p><strong>Fecha de Inicio:</strong> <span id="popup-fecha-inicio"></span></p>
+            <p><strong>Fecha Final:</strong> <span id="popup-fecha-final"></span></p>
+            <button id="matricular" onclick="matricularDesmatricular()">Matricular</button>
+        </div>
+    </div>
+    <script src="matricular2.js"></script>
+</body>
+</html>
