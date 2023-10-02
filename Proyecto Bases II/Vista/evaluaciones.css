@@ -1,60 +1,62 @@
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-body_evaluaciones {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #2c3338;
+.align {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 
-
-.contenedor_evaluaciones {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #454545;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Clase para el contenedor del formulario */
+.form-container {
+    background-color: #979090;
     padding: 20px;
-    text-align: center;
-    width: 30%;
-    margin: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
 }
 
-
-label {
-    color: white;
+/* Clase para los elementos del formulario */
+.form-label {
+    font-weight: bold;
+    margin-bottom: 10px;
     display: block;
-    margin-top: 10px;
 }
 
-
-input[type="text"],
-input[type="file"],
-select {
-    width: 20%;
+.form-input {
+    width: 100%;
     padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-top: 5px;
+}
+
+.form-button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-AgregarPregunta {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 
-h2 {
-    color: white;
+
+.pregunta-texto {
+    width: 5px;
+    padding: 5px; /* Reducir el relleno a 5px */
+    margin-bottom: 15px;
+    margin-top: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;    
 }
 
 
-label[for="tema"] {
-    color: #333;
-}

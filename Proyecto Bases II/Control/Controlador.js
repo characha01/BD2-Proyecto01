@@ -176,7 +176,38 @@ class Controller {
           console.log(`El usuario '${usuario}' no existe en la base de datos.`);
           return false;
         }
-      }
+    
+    }
+    // #####################################################
+//#################### Docente ######################
+// ####################################################
+async agregarCursoRedisDocente(usuario, curso) {
+    const validation = await claveExiste(0,usuario);
+    if (validation) {
+        const list = [curso];
+        return new Promise((resolve, reject) => {
+            client.select(4, () => {
+                
+                client.rpush(usuario, ...list, (err, result) => {
+                    if (err) {
+                        console.error('Error al agregar curso:', err);
+                        reject(err);
+                    } else {
+                        console.log('Curso agregado con éxito');
+                        resolve(true);
+                    }
+                });
+            });
+        });
+    } else {
+        
+        console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+        return false; 
+    }
+  }
+
+
+    
       //Metodo para verificar que el password sea correcto
     async  verificar_usuario(nombre, password) {
         async function valid(nombre, password) {
@@ -221,6 +252,25 @@ class Controller {
             return false; 
         }
     }
+    //Metodo para guardar evaluacion en Redis
+    async guardar_evaluacionRedis(name, objeto_evaluacion) {
+        return new Promise((resolve, reject) => {
+            client.select(2, () => {
+                console.log('Conectado a la base de datos 1');
+                
+                client.set(name, JSON.stringify(objeto_evaluacion), (err, result) => {
+                    if (err) {
+                        console.error('Error al establecer la clave:', err);
+                        reject(err); 
+                    } else {
+                        console.log('Clave establecida con éxito en la base de datos 1');
+                        resolve(true); 
+                    }
+                });
+            });
+        });
+    }
+
 
     async registrarUsuario (username, password, full_name, birthdate, path, is_teacher) {
         if (password.length < 8) {

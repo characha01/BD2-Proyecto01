@@ -15,6 +15,7 @@ const controlador = Singleton.getInstance();
 
 app.use(express.static(path.join(__dirname, 'Proyecto Bases II/Vista')));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Configurar multer para manejar la carga de archivos
 const storage = multer.diskStorage({
@@ -283,19 +284,41 @@ app.get('/cargarCurso', async (req, res) => {
     res.json(atributosCurso);
 });
 
-
-app.post('/registrarTema', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/curso.html'));
+app.post('/registrarTema', upload.fields([
+    { name: 'documentos', maxCount: 1 },
+    { name: 'videos', maxCount: 1 },
+    { name: 'imagenes', maxCount: 1 }
+]), (req, res) => {
+    // Accede a los archivos subidos
     const texto = req.body.texto;
-    console.log(texto);
-    const documento = req.body.documentos;
-    console.log(documento);
-    const video = req.body.videos;
-    console.log(video);
-    const imagen = req.body.imagenes;
-    console.log(imagen);
-
+    const documento = req.files['documentos'][0].filename;
+    const video = req.files['videos'][0].filename;
+    const imagen = req.files['imagenes'][0].filename;
     controlador.registrarTema(texto, documento, video, imagen);
+    //Resto del código para manejar el registro del tema
+    res.redirect('curso.html');
+});
+
+
+app.post('/guardar_evaluacion', async (req, res) => {
+    const evaluacion = req.body.nombreEvaluacion;
+    console.log(evaluacion);
+    /*
+    try {
+        const resultado = await controlador.guardar_evaluacionRedis(name, evaluacion);
+        
+        if (resultado) {
+            console.log('La evaluación se guardó con éxito.');
+            res.sendStatus(200); // OK
+        } else {
+            console.log('Error al guardar la evaluación.');
+            res.sendStatus(500); // Internal Server Error
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.sendStatus(500); // Internal Server Error
+    }
+    */
 });
 
 

@@ -55,6 +55,9 @@ parrafo.textContent = textoGrande;
 
 
 
+
+
+/*
 document.getElementById("agregar-pregunta").addEventListener("click", function() {
     const preguntasContainer = document.getElementById("preguntas-container");
 
@@ -116,4 +119,4 @@ opciones.forEach((opcion) => {
     option.value = opcion.value;
     option.text = opcion.text;
     selectTema.appendChild(option);
-}); 
+}); */

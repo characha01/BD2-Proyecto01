@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
-    <script src="curso.js" defer></script>
+    
     <link href="cursoStyles.css" rel="stylesheet">
     <link href="temas.css" rel="stylesheet">
     <link href="evaluaciones.css" rel="stylesheet">
@@ -26,22 +26,22 @@
             <h1>Temas</h1>
             <section class="body_temas">
 
-                <form action="/registrarTema" method="post">
+                <form action="/registrarTema" method="post" enctype="multipart/form-data">
                     <div>
                         <h2>Crear un tema</h2>
                         <label for="texto">Texto:</label>
-                        <input type="text" id="texto" placeholder="Escribe aquí">
+                        <input type="text" id="texto" name="texto" placeholder="Escribe aquí">
                 
                         <label for="documentos">Documentos:</label>
-                        <input type="file" id="documentos" accept=".pdf, .docx, .txt">
+                        <input type="file" id="documentos" name ="documentos" accept=".pdf, .docx, .txt">
                 
                         <label for="videos">Videos:</label>
-                        <input type="file" id="videos" accept=".mp4, .avi, .mkv">
+                        <input type="file" id="videos" name="videos" accept=".mp4, .avi, .mkv">
                 
                         <label for="imagenes">Imágenes:</label>
-                        <input type="file" id="imagenes" accept=".jpg, .png, .gif">
+                        <input type="file" id="imagenes" name="imagenes" accept=".jpg, .png, .gif">
 
-                        <input type="submit">Aceptar</button>
+                        <input type="submit">Aceptar</input>
                     </div>
                 </form>
 
@@ -61,28 +61,21 @@
         <div id="evaluaciones" data-tab-content>
             <h1>Evaluaciones</h1>
             <section class="body_evaluaciones">
-                <form id="evaluacion-form">
-                    <label for="titulo">Título de la Evaluación:</label>
-                    <input type="text" id="titulo" name="titulo" required><br><br>
-            
-                    <label for="fecha-inicio">Fecha de Inicio:</label>
-                    <input type="datetime-local" id="fecha-inicio" name="fecha-inicio" required><br><br>
-            
-                    <label for="fecha-fin">Fecha de Fin:</label>
-                    <input type="datetime-local" id="fecha-fin" name="fecha-fin" required><br><br>
-            
-                    <h2>Preguntas:</h2>
-            
-                    <div id="preguntas-container">
-                        <!-- AQUÍ SE AGREGAN LAS PREGUNTAS DE MANERA DINÁMICA -->
-                    </div>
-            
-                    <button type="button" id="agregar-pregunta">Agregar Pregunta</button><br><br>
-            
-                    <button type="submit">Crear Evaluación</button>
-                </form>
+                <div class="align">
+                        <div class="form-container">
+                            <label class="form-label" for="nombreEvaluacion">Nombre de la Evaluación:</label>
+                            <input class="form-input" type="text" id="nombreEvaluacion" name="nombreEvaluacion">
+
+                            <div id="preguntasContainer">
+                            <!-- Aquí se agregarán dinámicamente las preguntas y respuestas -->
+                            </div>
+
+                            <button class="form-button" id="agregarPregunta">Agregar Pregunta</button>
+                            <button class="form-button" id="guardarEvaluacion">Guardar Evaluación</button> 
+                        </div>
+                </div>  
             </section>
-        </div>
-    </div>
+    <script src="curso.js"></script>
+    <script src="crear_evaluacion.js"></script>
 </body>
 </html>
