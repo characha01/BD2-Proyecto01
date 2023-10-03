@@ -181,7 +181,7 @@ class Controller {
     // #####################################################
 //#################### Docente ######################
 // ####################################################
-async agregarCursoRedisDocente(usuario, curso) {
+async agregarCursoDocente(usuario, curso) {
     const validation = await claveExiste(0,usuario);
     if (validation) {
         const list = [curso];
@@ -234,7 +234,7 @@ async agregarCursoRedisDocente(usuario, curso) {
     }
   }
 
-  async  obtenerListaCursosRedisDocente(usuario) {
+  async  getCursosDocente(usuario) {
     const validation = await claveExiste(0,usuario);
     if(validation){
       return new Promise((resolve, reject) => {
@@ -256,8 +256,59 @@ async agregarCursoRedisDocente(usuario, curso) {
       
     }
   }
-  
+    //Metodo para agregar amigo
+    async  agregarAmigo(usuario, amigo) {
+        // Verificar si el usuario ya existe
+        const usuarioExiste = await claveExiste(0, usuario);
+        const amigoExiste = await claveExiste(0, amigo);
+      
+        if (usuarioExiste && amigoExiste) {
+            
+            const list = [amigo];
+            return new Promise((resolve, reject) => {
+                client.select(1, () => {
+                    console.log('Conectado a la base de datos 1');
+                    client.rpush(usuario, ...list, (err, result) => {
+                        if (err) {
+                            console.error('Error al agregar amigo:', err);
+                            reject(err);
+                        } else {
+                            console.log('Amigo agregado con éxito');
+                            resolve(true);
+                        }
+                    });
+                });
+            });
+        } else {
+            
+            console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+            return false; 
+        }
+      }
 
+      //Metodo para obtener lista de amigos de un usuario
+      async  obtenerAmigos(usuario) {
+        const validation = await claveExiste(0,usuario);
+        if(validation){
+          return new Promise((resolve, reject) => {
+              client.select(1, () => {
+                  console.log('Conectado a la base de datos 1');
+                  client.lrange(usuario, 0, -1, (err, result) => {
+                      if (err) {
+                          console.error('Error al obtener la lista de amigos:', err);
+                          reject(err);
+                      } else {
+                          console.log('Lista de amigos obtenida con éxito');
+                          resolve(result);
+                      }
+                  });
+              });
+          });
+        }else{
+          console.log(`El usuario '${usuario}' no existe en la base de datos.`);
+          
+        }
+      }
 
     
       //Metodo para verificar que el password sea correcto
@@ -310,7 +361,7 @@ async agregarCursoRedisDocente(usuario, curso) {
             client.select(2, () => {
                 console.log('Conectado a la base de datos 1');
                 
-                client.set(name, JSON.stringify(objeto_evaluacion), (err, result) => {
+                client.rpush(name,...[JSON.stringify(objeto_evaluacion)], (err, result) => {
                     if (err) {
                         console.error('Error al establecer la clave:', err);
                         reject(err); 
@@ -323,7 +374,27 @@ async agregarCursoRedisDocente(usuario, curso) {
         });
     }
 
-
+    async getPath(id) {
+        let data = new ObjectId(id);;
+        const Documento = this.mongoose.model("Documento",this.Documentos);
+        const object = new ObjectId(id);
+        async function getMongo(id){
+            try {
+                console.log(id);
+                data = await Documento.find({ _id: object }); // Filtra por la ruta
+                if (data) {
+                const path = data.ruta;
+                console.log('Datos obtenidos de MongoDB:', data._id);
+                return path;
+                } else {
+                console.log('Documento no encontrado en MongoDB');
+                }
+            } catch (error) {
+                console.error('Error al obtener datos de MongoDB:', error);
+            }
+        }
+        getMongo(id);
+    }
     async registrarUsuario (username, password, full_name, birthdate, path, is_teacher) {
         if (password.length < 8) {
             return false;
@@ -446,13 +517,14 @@ async agregarCursoRedisDocente(usuario, curso) {
 
 		this.dbCassandra.execute('USE test');
 		const query = 'INSERT INTO curso (id, codigo, descripcion, fechafinal, fechainicio, idfoto, idprofesor, nombre) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)';
-  		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this._user.getId(), nombre];
+  		const params = [codigo, descripcion, fechaFinal, fechaInicio, data._id.toString(), this._user.getNombre(), nombre];
 		this.dbCassandra.execute(query, params, { prepare: true }, function(err, result) {
 			if (err) {
 				console.error('Error al insertar datos:', err);
                 return false;
 			} else {
 				console.log('Datos insertados exitosamente');
+                insertarCursoDocente()
                 return true;
 			}
 		});		
@@ -501,7 +573,7 @@ async agregarCursoRedisDocente(usuario, curso) {
                 curso.push(row.id.toString());
                 curso.push(row.nombre);
                 curso.push(row.codigo);
-                //curso.push(row.idprofesor);
+                curso.push(row.idprofesor);
                 curso.push(row.descripcion);
                 curso.push(row.fechainicio.toString());
                 curso.push(row.fechafinal.toString());
@@ -521,6 +593,7 @@ async agregarCursoRedisDocente(usuario, curso) {
                 listaCurso.push(row.nombre);
                 listaCurso.push(row.codigo);
                 //curso.push(row.idprofesor);
+                listaCurso.push(row.idprofesor);
                 listaCurso.push(row.descripcion);
                 listaCurso.push(row.fechainicio.toString());
                 listaCurso.push(row.fechafinal.toString());

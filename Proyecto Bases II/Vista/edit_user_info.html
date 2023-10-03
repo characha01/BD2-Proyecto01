@@ -9,7 +9,7 @@
 <body class="align">
     <h1 class="text--center">Editar Información de Usuario</h1>
     <div class="grid">
-        <form action="#" method="post" class="form login">
+        <form action="/editarUsuario" method="post" class="form login">
             <div class="form_field">
                 <label for="username">User name:</label>
                 <div class="form_input">
@@ -20,12 +20,6 @@
                 <label for="password">Password:</label>
                 <div class="form_input">
                     <input type="password" id="password" name="password" required>
-                </div>
-            </div>
-            <div class="form_field">
-                <label for="salt">Salt:</label>
-                <div class="form_input">
-                    <input type="text" id="salt" name="salt" required>
                 </div>
             </div>
             <div class="form_field">
@@ -51,5 +45,6 @@
             </div>
         </form>
     </div>
+    <script src="edit_user_info.js"></script>
 </body>
 </html>

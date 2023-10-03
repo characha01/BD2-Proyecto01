@@ -7,7 +7,7 @@ function cargarContenidoCurso() {
         tituloCurso.innerHTML = data[1];
 
         const descripcionDeCurso = document.getElementById('descripcionDeCurso');
-        descripcionDeCurso.innerHTML = data[3];
+        descripcionDeCurso.innerHTML = data[4];
         
     })
     .catch(error => {

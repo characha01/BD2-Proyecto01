@@ -30,12 +30,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-app.get('/matricular', upload.single('imagen'), (req, res) => {
+app.post('/upload', upload.single('imagen'), (req, res) => {
     try{
     console.log("MATRICULAR");
-    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/matricular.html'));
+    res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/register.html'));
     if (!req.file) {
-        alert("Error");
+        console.log("No funciona Imagen");
     }
     else{
     const rutaImagen = path.basename(req.file.path);
@@ -66,10 +66,10 @@ app.get('/matricular', upload.single('imagen'), (req, res) => {
 
 
 // Ruta para cargar la imagen
-app.post('/upload', (req, res) => {
+app.post('/matricular', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/matricular2.html'));
     if (!req.file) {
-        alert("Error");
+        console.log("No funciona Imagen");
     }
     else{
         const listaCursos = controlador.getCursos();
@@ -120,43 +120,32 @@ app.post('/curso',upload.single('imagen'), (req, res) => {
         const rutaImagen = path.basename(req.file.path);
         
         if (controlador.registrarCurso(codigo, descripcion, fechaFinal, fechaInicio, nombre, rutaImagen)) {
+
             res.redirect('index_main.html');
+
         }
-        // Perform any necessary actions with username and password
+
     }
 });
 
 //Esta funciona rellena los espacios del usuario en la pantalla de editar Perfil
-app.get('/cargarPerfil', (req, res) => {
+app.get('/cargarPerfil', async (req, res) => {
     // Lee el contenido del archivo HTML
-    const formularioHTML = fs.readFileSync('edit_user_info.html', 'utf-8');
-    //let username = controlador.getUser()._userName;
-    let password = controlador.getUser()._password;
-    let nombre = controlador.getUser()._Nombre;
-    let fechaNac = controlador.getUser()._fechaNac;
-    let foto = controlador.getUser()._foto;
-    // Modifica el contenido del formulario según sea necesario
-    const formularioLleno = formularioHTML
-        .replace('value=""', 'value="${username}"') // Reemplaza con el valor deseado
-        .replace('value=""', 'value="${password}"') // Reemplaza con el valor deseado
-        .replace('value=""', 'value="${nombre}"') // Reemplaza con el valor deseado
-        .replace('value=""', 'value="${fechaNac}"') // Reemplaza con el valor deseado
-        .replace('value=""', 'value="${foto}"'); // Reemplaza con el valor deseado
-
-    // Envía el formulario modificado como respuesta
-    res.send(formularioLleno);
-
-    let temp = "";
-    const usuarioActual = controlador.getUser().getUserName();
-
-    console.log(usuarioActual);
-
-    const username = usuarioActual.getUserName();
-    //const password = usuarioActual.getPassword();
-    listaCursos.forEach(async (nombreCurso, index) =>{   
-        temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}">${nombreCurso[1]}</button>`;
-    })
-    res.send(temp);
+    let username = controlador.getUser().getUserName();
+    let password = controlador.getUser().getPassword();
+    let nombre = controlador.getUser().getNombre();
+    let fechaNac = controlador.getUser().getFechaNac();
+    let foto = controlador.getUser().getFoto();
+    const path = await controlador.getPath(foto);
+    console.log(path);
+    const usuario = []
+    usuario.push(username);
+    usuario.push(password);
+    usuario.push(nombre);
+    usuario.push(fechaNac);
+    
+    usuario.push(path);
+    res.send(usuario);
 });
 
 app.post('/editPerfil',upload.single('imagen'), (req, res) => {
@@ -212,7 +201,7 @@ app.get('/cargarCursos', async (req, res) => {
     const usuarioActual = controlador.getUser().getUserName();
     const listaCursos = await controlador.getCursos();
     const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
-    const listaCursosDocente = await controlador.getCursosDocente(usuarioActual);
+    //const listaCursosDocente = await controlador.getCursosDocente(usuarioActual);
     console.log(listaCursosMatriculados);
 
     listaCursos.forEach((curso, index) =>{   
@@ -224,10 +213,8 @@ app.get('/cargarCursos', async (req, res) => {
         curso.push('false');    
     });
 
-    console.log(listaCursos);
-
     listaCursos.forEach(async (nombreCurso, index) =>{   
-        temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}">${nombreCurso[1]}</button>`;
+        temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[4]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}">${nombreCurso[1]}</button>`;
     })
     res.send(temp);
 });
@@ -240,7 +227,6 @@ app.get('/cargarCursosMatriculados', async (req, res) => {
     const listaCursos = await controlador.getCursos();
     const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
     const listaResultados = [];
-
     listaCursos.forEach((curso, index) =>{   
         listaCursosMatriculados.forEach(cursoMatriculado =>{
             if(curso[0]==cursoMatriculado){
@@ -250,36 +236,37 @@ app.get('/cargarCursosMatriculados', async (req, res) => {
         curso.push('false');    
     });
 
-
+    //console.log(listaCursos);
     listaCursos.forEach(async (nombreCurso, index) =>{
-        if (nombreCurso[6] == "true"){
-            temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}"></input>`;
-        }   
+        if (nombreCurso[7] == "true"){
+            temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[7]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}"></input>`;
+       }   
     })
+    console.log(temp);
     res.send(temp);
+
 });
 
 
 app.get('/cargarCursosDocente', async (req, res) => {
     let temp = "";
-    const usuarioActual = controlador.getUser().getUserName();
+    const usuarioActual = controlador.getUser().getNombre();
     const listaCursos = await controlador.getCursos();
-    //const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
+    //const listaCursosMatriculados = await controlador.getCursosDocente(usuarioActual);
     const listaResultados = [];
-
     listaCursos.forEach((curso, index) =>{   
-        if(curso[7]==usuarioActual.getUserName()){
+        if(curso[3]==usuarioActual){
             curso.push('true');
         }
         else{
             curso.push('false');
         }
     });
-
+    console.log(listaCursos);
 
     listaCursos.forEach(async (nombreCurso, index) =>{
-        if (nombreCurso[6] == "true"){
-            temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="Profesor 1" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[4]}" data-fecha-final="${nombreCurso[5]}" id="${index}"></input>`;
+        if (nombreCurso[7] == "true"){
+            temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[7]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}"></input>`;
         }   
     })
     res.send(temp);
@@ -295,8 +282,7 @@ app.post('/matricularCurso', async (req, res) => {
     else {
         controlador.agregarCursoMatriculado(usuarioActual, idCurso);
     }
-    //res.send(idCurso);
-});
+}); 
 
 app.post('/verCurso', async (req, res) => {
 
@@ -310,7 +296,7 @@ app.post('/verCurso', async (req, res) => {
         //controlador.agregarCursoMatriculado(usuarioActual, idCurso);
     //}
     idCursoActual=idCurso;
-    res.redirect('curso.html');
+    res.redirect('cursoMatriculado.html');
 });
 
 app.post('/verCursoDocente', async (req, res) => {
@@ -354,7 +340,7 @@ app.post('/guardar_evaluacion', async (req, res) => {
     const evaluacion = req.body.evaluacion;
     const name = req.body.evaluacion['nombreEvaluacion'];
     try {
-        const resultado = await controlador.guardar_evaluacionRedis(name, evaluacion);
+        const resultado = await controlador.guardar_evaluacionRedis(idCursoActual, evaluacion);
         if (resultado) {
             console.log('La evaluación se guardó con éxito.');
             res.sendStatus(200); // OK

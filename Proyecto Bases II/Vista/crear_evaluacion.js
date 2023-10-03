@@ -11,25 +11,47 @@ function cargarLogica(){
         };
 
         const preguntasDivs = preguntasContainer.querySelectorAll('.pregunta');
+        var contador = 1;
         preguntasDivs.forEach((preguntaDiv) => {
             const preguntaInput = preguntaDiv.querySelector('.pregunta-texto').value;
             const respuestasInputs = preguntaDiv.querySelectorAll('.respuesta');
             const respuestas = [];
+            //const radioSeleccion = 
 
             respuestasInputs.forEach((respuestaInput) => {
                 respuestas.push(respuestaInput.value);
             });
-
+            
+            var indiceRespuestaCorrecta = getSelectedIndex('Pregunta'+contador);
+            contador +=1;
             evaluacion.preguntas.push({
                 pregunta: preguntaInput,
-                respuestas: respuestas
+                respuestas: respuestas,
+                respuestaCorrecta: indiceRespuestaCorrecta
             });
         });
         enviarEvaluacionAlServidor(evaluacion);
     });
 };
 
+function getSelectedIndex(groupName) {
+    const radioButtons = document.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
+    for (let i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            return i;
+        }
+    }
+    // If no radio button is selected, return -1 or handle accordingly
+    console.log(groupName)
+    return -1;
+};
+
+
+
+
+var numeroDePregunta=0;
 function agregarPregunta(){
+    numeroDePregunta+=1
     const preguntaDiv = document.createElement('div');
     preguntaDiv.classList.add('pregunta');
 
@@ -41,12 +63,24 @@ function agregarPregunta(){
     const agregarRespuestaButton = document.createElement('button');
     agregarRespuestaButton.textContent = 'Agregar Respuesta';
     agregarRespuestaButton.addEventListener('click', () => {
+        const answerContainer = document.createElement('div');
+        answerContainer.style.display = 'flex';
+
+        const radioRespuesta = document.createElement('input');
+        radioRespuesta.type = 'radio';
+        radioRespuesta.name = 'Pregunta'+numeroDePregunta;
+
         const respuestaInput = document.createElement('input');
         respuestaInput.classList.add('respuesta');
         respuestaInput.type = 'text';
         respuestaInput.placeholder = 'Escribe una respuesta';
+
         
-        preguntaDiv.appendChild(respuestaInput);
+        answerContainer.appendChild(respuestaInput);
+        answerContainer.appendChild(radioRespuesta);
+        
+        preguntaDiv.appendChild(answerContainer);
+
     });
 
     const eliminarPreguntaButton = document.createElement('button');
@@ -62,7 +96,9 @@ function agregarPregunta(){
 };
 
 
-
+const radioRespuestaCorrecta = document.createElement('input');
+        radioRespuestaCorrecta.setAttribute('type', 'radio');
+        radioRespuestaCorrecta.setAttribute('name', 'pregunta'+numeroDePregunta);
 
 
 
