@@ -1,9 +1,9 @@
 function cargarContenidoCursos() {
-    fetch('/cargarCurso') // Route to fetch data from the server
+    fetch('/cargarCurso') 
     .then(response => response.text())
     .then(data => {
         const contenidoCursos = document.getElementById('contenedor-cursos');
-        contenidoCursos.innerHTML = data; // Update the div content
+        contenidoCursos.innerHTML = data;
     })
     .catch(error => {
         console.error('Error fetching data:', error);
@@ -72,8 +72,6 @@ document.getElementById("agregar-pregunta").addEventListener("click", function()
 document.getElementById("evaluacion-form").addEventListener("submit", function(event) {
     event.preventDefault();
     
-    // AQUÍ SE CAPTURAN LOS DATOS.
-    // Ejemplo de cómo capturar los datos:
     const titulo = document.getElementById("titulo").value;
     const fechaInicio = document.getElementById("fecha-inicio").value;
     const fechaFin = document.getElementById("fecha-fin").value;
@@ -90,7 +88,6 @@ document.getElementById("evaluacion-form").addEventListener("submit", function(e
         preguntas.push({ pregunta, opciones });
     });
 
-    // ENVIAR DATOS AL SERVIDOR DE PROCESAMIENTO
     console.log("Título:", titulo);
     console.log("Fecha de Inicio:", fechaInicio);
     console.log("Fecha de Fin:", fechaFin);

@@ -1,5 +1,5 @@
 function cargarContenidoPerfil() {
-    fetch('/cargarPerfil') // Route to fetch data from the server
+    fetch('/cargarPerfil')
     .then(response => response.json())
     .then(data => {
         console.log(data[1]);

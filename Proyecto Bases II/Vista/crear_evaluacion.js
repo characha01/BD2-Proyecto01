@@ -16,7 +16,6 @@ function cargarLogica(){
             const preguntaInput = preguntaDiv.querySelector('.pregunta-texto').value;
             const respuestasInputs = preguntaDiv.querySelectorAll('.respuesta');
             const respuestas = [];
-            //const radioSeleccion = 
 
             respuestasInputs.forEach((respuestaInput) => {
                 respuestas.push(respuestaInput.value);
@@ -41,7 +40,6 @@ function getSelectedIndex(groupName) {
             return i;
         }
     }
-    // If no radio button is selected, return -1 or handle accordingly
     console.log(groupName)
     return -1;
 };
@@ -117,7 +115,6 @@ cargarLogica();
 
 
 function enviarEvaluacionAlServidor(evaluacion) {
-    // URL del servidor donde deseas enviar la evaluación
     const url = 'http://localhost:3000/guardar_evaluacion';
 
     
@@ -133,7 +130,6 @@ function enviarEvaluacionAlServidor(evaluacion) {
     fetch(url, options)
         .then((response) => {
             if (response.ok) {
-                // La evaluación se envió con éxito al servidor
                 console.log('Evaluación enviada con éxito al servidor');
             } else {
                 console.error('Error al enviar la evaluación al servidor');
@@ -143,10 +139,3 @@ function enviarEvaluacionAlServidor(evaluacion) {
             console.error('Error al enviar la evaluación al servidor:', error);
         });
 }
-//const guardarEvaluacion = document.getElementById('guardarEvaluacion');
-//guardarEvaluacion.addEventListener('click', () => {
-//    enviarEvaluacionAlServidor();
-//});
-
-
-

@@ -1,14 +1,14 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const bodyParser = require('body-parser'); // Import body-parser
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
 const Controller = require('./Proyecto Bases II/Control/Controlador.js')
 const Singleton = require('./Proyecto Bases II/Control/Singleton.js');
 
-var idCursoActual;
+var idCursoActual=-1;
 
 
 const controlador = Singleton.getInstance();
@@ -17,14 +17,13 @@ app.use(express.static(path.join(__dirname, 'Proyecto Bases II/Vista')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Configurar multer para manejar la carga de archivos
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'upload/'); // Directorio donde se guardarán las imágenes
+        cb(null, 'upload/'); 
     },
     filename: function (req, file, cb) {
         const extname = path.extname(file.originalname);
-        cb(null, Date.now() + extname); // Renombrar el archivo con una marca de tiempo
+        cb(null, Date.now() + extname); 
     }
 });
 const upload = multer({ storage: storage });
@@ -55,17 +54,6 @@ app.post('/upload', upload.single('imagen'), (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-// Ruta para cargar la imagen
 app.post('/matricular', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/matricular2.html'));
     if (!req.file) {
@@ -105,7 +93,6 @@ app.post('/verify', async(req, res) => {
 app.post('/curso',upload.single('imagen'), (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Proyecto Bases II/Vista/index_curso_registrar.html'));
     if (!req.file) {
-        //alert("Error");
         console.log('no funciona imagen');
     }
     else{
@@ -125,9 +112,7 @@ app.post('/curso',upload.single('imagen'), (req, res) => {
     }
 });
 
-//Esta funciona rellena los espacios del usuario en la pantalla de editar Perfil
 app.get('/cargarPerfil', async (req, res) => {
-    // Lee el contenido del archivo HTML
     let username = controlador.getUser().getUserName();
     let password = controlador.getUser().getPassword();
     let nombre = controlador.getUser().getNombre();
@@ -168,14 +153,11 @@ app.get('/api/cursos', async (req, res) => {
     const cursos = await controlador.getCursos();
     console.log(cursos);
     
-    // Construir una lista HTML de botones para los cursos
     let listaCursosHTML = '';
     
     cursos.forEach((nombreCurso, index) => {
-        // Generar un ID único para cada popup
         var popupId = index;
         
-        // Crea un botón para cada curso y agrega un atributo data con el nombre del curso
         listaCursosHTML += `<button class="curso" data-nombre="${nombreCurso}" id="${popupId}">${nombreCurso}</button>`;
         listaCursosHTML += `<div id="${popupId}" class="popup">`;
         listaCursosHTML += `<div class="popup-content">`;
@@ -187,18 +169,15 @@ app.get('/api/cursos', async (req, res) => {
         listaCursosHTML += '</div>';
     });
     
-    // Envía la lista de cursos HTML como respuesta al cliente
     console.log(listaCursosHTML);
     res.send(listaCursosHTML);
     
 });
-// AGREGA BOTONES EN VISTA MATRICULAR
 app.get('/cargarCursos', async (req, res) => {
     let temp = "";
     const usuarioActual = controlador.getUser().getUserName();
     const listaCursos = await controlador.getCursos();
     const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
-    //const listaCursosDocente = await controlador.getCursosDocente(usuarioActual);
     console.log(listaCursosMatriculados);
     if(listaCursos == undefined) {}
     else{
@@ -227,8 +206,6 @@ app.get('/cargarCursos', async (req, res) => {
     res.send(temp);
 });
 
-
-// AGREGA BOTONES EN VISTA CURSOS MATRICULADOS
 app.get('/cargarCursosMatriculados', async (req, res) => {
     let temp = "";
     const usuarioActual = controlador.getUser().getUserName();
@@ -244,7 +221,6 @@ app.get('/cargarCursosMatriculados', async (req, res) => {
         curso.push('false');    
     });
 
-    //console.log(listaCursos);
     listaCursos.forEach(async (nombreCurso, index) =>{
         if (nombreCurso[7] == "true"){
             temp += `<input type="submit" class="submit-curso" value ="${nombreCurso[1]}" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[7]}" data-descripcion="${nombreCurso[3]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}"></input>`;
@@ -260,7 +236,6 @@ app.get('/cargarCursosDocente', async (req, res) => {
     let temp = "";
     const usuarioActual = controlador.getUser().getNombre();
     const listaCursos = await controlador.getCursos();
-    //const listaCursosMatriculados = await controlador.getCursosDocente(usuarioActual);
     const listaResultados = [];
     listaCursos.forEach((curso, index) =>{   
         if(curso[3]==usuarioActual){
@@ -289,6 +264,8 @@ app.post('/matricularCurso', async (req, res) => {
     }
     else {
         controlador.agregarCursoMatriculado(usuarioActual, idCurso);
+        idCursoActual = req.body.idCurso;
+        controlador.agregarEstudianteACurso(idCursoActual);
     }
 }); 
 
@@ -296,13 +273,6 @@ app.post('/verCurso', async (req, res) => {
 
     const idCurso = req.body.idCurso;
     console.log(idCurso);
-    //const matriculado = req.body.matriculado;
-    //if (matriculado == "false") {
-    //    controlador.eliminarCursoRedis(usuarioActual, idCurso);    
-   // }
-   // else {
-        //controlador.agregarCursoMatriculado(usuarioActual, idCurso);
-    //}
     idCursoActual=idCurso;
     res.redirect('cursoMatriculado.html');
 });
@@ -311,18 +281,10 @@ app.post('/verCursoDocente', async (req, res) => {
 
     const idCurso = req.body.idCurso;
     console.log(idCurso);
-    //const matriculado = req.body.matriculado;
-    //if (matriculado == "false") {
-    //    controlador.eliminarCursoRedis(usuarioActual, idCurso);    
-   // }
-   // else {
-        //controlador.agregarCursoMatriculado(usuarioActual, idCurso);
-    //}
     idCursoActual=idCurso;
     res.redirect('curso.html');
 });
 
-// CARGA INFORMACION DE UN CURSO EN LA VISTA DE CURSO.html
 app.get('/cargarCurso', async (req, res) => {
     const atributosCurso = await controlador.getCurso(idCursoActual); 
     res.json(atributosCurso);
@@ -350,15 +312,34 @@ app.post('/guardar_evaluacion', async (req, res) => {
         const resultado = await controlador.guardar_evaluacionRedis(idCursoActual, evaluacion);
         if (resultado) {
             console.log('La evaluación se guardó con éxito.');
-            res.sendStatus(200); // OK
+            res.sendStatus(200); 
         } else {
             console.log('Error al guardar la evaluación.');
-            res.sendStatus(500); // Internal Server Error
+            res.sendStatus(500); 
         }
     } catch (error) {
         console.error('Error:', error);
-        res.sendStatus(500); // Internal Server Error
+        res.sendStatus(500); 
     }
+});
+
+
+app.get('/obtenerEstudiantes', async (req, res) => {
+ 
+    /*
+    const estudiantes = [
+        { nombre: "Estudiante 1", edad: 20 },
+        { nombre: "Estudiante 2", edad: 22 },
+        { nombre: "Estudiante 3", edad: 21 }
+    ];
+    */
+
+    const estudiantes = await controlador.getEstudiantesCurso(idCursoActual);
+
+
+    console.log("ESTUDIANTES:"+estudiantes);
+    res.send(estudiantes);
+
 });
 
 

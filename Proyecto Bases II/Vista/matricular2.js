@@ -1,14 +1,9 @@
-
-//const listaCursos = controlador.getCursos();
-//window.addEventListener('DOMContentLoaded', cargarLista);
-
-
 function cargarContenidoCursos() {
-    fetch('/cargarCursos') // Route to fetch data from the server
+    fetch('/cargarCursos')
     .then(response => response.text())
     .then(data => {
         const contenidoCursos = document.getElementById('contenedor-cursos');
-        contenidoCursos.innerHTML = data; // Update the div content
+        contenidoCursos.innerHTML = data;
     })
     .catch(error => {
         console.error('Error fetching data:', error);
@@ -18,7 +13,6 @@ function cargarContenidoCursos() {
 
 cargarContenidoCursos();
 
-// Funcion para mostrar la ventana emergente con informaci贸n del curso
 function mostrarInformacionCurso(idBotonCurso) {
     console.log("MOSTRAR");
     
@@ -52,12 +46,12 @@ function mostrarInformacionCurso(idBotonCurso) {
     fechaInicio.textContent = botonCurso.getAttribute('data-fecha-inicio');
     fechaFinal.textContent = botonCurso.getAttribute('data-fecha-final');
     
-    popup.style.display = 'block'; // Mostrar la ventana emergente
+    popup.style.display = 'block'; 
 }
 
 
 function matricularCurso(){
-    fetch('/matricularCurso') // Route to fetch data from the server
+    fetch('/matricularCurso') 
     .then(response => response.text())
     .then(data => {
         console.log(`Curso Matriculado:${data}`);
@@ -67,19 +61,16 @@ function matricularCurso(){
     });  
 }
 
-// Funci贸n para cerrar la ventana emergente
 function cerrarPopup() {
     const popup = document.getElementById('popup');
-    popup.style.display = 'none'; // Ocultar la ventana emergente
+    popup.style.display = 'none'; 
 }
 
-// Asociar la funcion mostrarInformacionCurso a los botones de curso
 
 function agregarListeners(){
     const botonesCurso = document.querySelectorAll('.boton-curso');
     console.log(botonesCurso);
     botonesCurso.forEach((boton) => {
-        //console.log(boton.getAttribute('data-nombre'));
         boton.addEventListener('click', () => {
             console.log("CLICK")
             mostrarInformacionCurso(boton);

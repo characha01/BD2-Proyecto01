@@ -21,6 +21,10 @@
         <div id="curso" data-tab-content class="active">
             <h1 id="tituloNombreCurso"></h1>
             <pre id="descripcionDeCurso"></pre>
+            
+            <h2>Lista de Estudiantes:</h2>
+            <ul id="lista-estudiantes">
+            </ul>
         </div>
         <div id="temas" data-tab-content>
             <h1>Temas</h1>
@@ -52,7 +56,6 @@
                 <div class="contenedor">
                     <label for="tema">Elegir tema:</label>
                     <select id="tema">
-                        <!--OPCIONES DEL COMBO BOX VAN AQUI-->
                     </select>
             
                 </div>
@@ -71,7 +74,6 @@
                             <input class="form-input" type="text" id="nombreEvaluacion" name="nombreEvaluacion">
 
                             <div id="preguntasContainer">
-                            <!-- Aquí se agregarán dinámicamente las preguntas y respuestas -->
                             </div>
 
                             <button class="form-button" id="agregarPregunta">Agregar Pregunta</button>

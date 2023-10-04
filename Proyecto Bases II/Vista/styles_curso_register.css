@@ -183,7 +183,7 @@ p {
 .text--center {
     text-align: center;
 }
-/* Agrega la clase 'align' al div container */
+
 .container {
     display: flex;
     flex-direction: column;
@@ -192,7 +192,6 @@ p {
     height: 100vh;   
   }
 
-  /* Agrega la clase 'grid' al formulario */
   form {
     max-width: 500px;
     max-width: 20rem;
@@ -202,11 +201,10 @@ p {
     padding: 300px;
     padding: 1rem;
     color: #eee;
-    max-width: 800px; /* Puedes ajustar este valor según tus necesidades */
-    margin: 0 auto; /* Centra el container horizontalmente */
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  /* Aplica la clase 'form_field' a cada div de 'input-box' */
   .form_field {
     display: flex;
     flex-direction: column;
@@ -214,7 +212,6 @@ p {
     margin: 0.875rem;
   }
 
-  /* Aplica la clase 'form_input' a los input dentro de '.form_field' */
   .form_field input {
     background-color: #3b4148;
     border: 0;
@@ -230,7 +227,6 @@ p {
     padding: 1rem;
   }
 
-  /* Estilo para el botón de 'Register' */
   .button {
     text-align: center;
   }
@@ -253,7 +249,6 @@ p {
     background-color: #2d9df8;
   }
 
-  /* Estilo para el título "Registration" */
   .title {
     font-size: 24px;
     font-size: 1.5rem;
@@ -261,7 +256,6 @@ p {
     margin-bottom: 1.5rem;
   }
 
-  /* Estilo para el formulario en general */
   form {
     margin: 0;
   }
@@ -298,6 +292,6 @@ p {
     width: 100%;
     padding: 16px;
     padding: 1rem;
-    resize: vertical; /* Permite redimensionar verticalmente */
-    min-height: 150px; /* Altura mínima */
+    resize: vertical; 
+    min-height: 150px; 
 }

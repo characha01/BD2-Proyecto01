@@ -1,5 +1,5 @@
 function cargarContenidoCurso() {
-    fetch('/cargarCurso') // Route to fetch data from the server
+    fetch('/cargarCurso') 
     .then(response => response.json())
     .then(data => {
         console.log(data[1]);
@@ -17,7 +17,34 @@ function cargarContenidoCurso() {
 } 
 cargarContenidoCurso();
 
+function mostrarPrueba(evaluacion) {
+    const preguntasContainer = document.getElementById('preguntasContainer');
 
+    evaluacion.forEach((pregunta, indice) => {
+        const preguntaDiv = document.createElement('div');
+        preguntaDiv.classList.add('pregunta');
+
+        const preguntaTexto = document.createElement('p');
+        preguntaTexto.textContent = `${indice + 1}. ${pregunta.pregunta}`;
+
+        preguntaDiv.appendChild(preguntaTexto);
+
+        pregunta.respuestas.forEach((respuesta, respuestaIndice) => {
+            const radioInput = document.createElement('input');
+            radioInput.type = 'radio';
+            radioInput.name = `respuesta${indice}`;
+            radioInput.value = respuesta;
+
+            const respuestaLabel = document.createElement('label');
+            respuestaLabel.textContent = respuesta;
+
+            preguntaDiv.appendChild(radioInput);
+            preguntaDiv.appendChild(respuestaLabel);
+        });
+
+        preguntasContainer.appendChild(preguntaDiv);
+    });
+}
 
 
 
@@ -25,7 +52,7 @@ cargarContenidoCurso();
 
 
 function cargarTemas() {
-    fetch('/cargarTema') // Ruta para obtener datos del servidor
+    fetch('/cargarTema') 
     .then(response => response.json())
     .then(data => {
         
@@ -50,11 +77,9 @@ function cargarTemas() {
                 console.log(temaSeleccionado.videos);
                 console.log(temaSeleccionado.imagenes);
 
-                // Configura los enlaces para documentos y videos
                 temaDocumento.setAttribute("href", "/upload/" + temaSeleccionado.documentos);
                 temaVideo.setAttribute("src", "/upload/" + temaSeleccionado.videos);
 
-                // Configura la imagen
                 temaImagen.setAttribute("src", "/upload/" + temaSeleccionado.imagenes);
             }
         }

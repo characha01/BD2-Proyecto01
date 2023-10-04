@@ -104,6 +104,11 @@ class Controller {
     set user(value) {
         this._user = value;
     }
+
+    set idCursoActual(id){
+        this.idCursoActual = id;
+    }
+
     //Metodos para ingresar cursos matriculados por usuario
     async agregarCursoMatriculado(usuario, curso) {
         const validation = await claveExiste(0,usuario);
@@ -339,6 +344,32 @@ async agregarCursoDocente(usuario, curso) {
         console.log(isMatch);
         return isMatch;
     }
+      //Obtener evaluacion
+      async  obtenerEvaluacionRedis(nombreUsuario, nombreEvaluacion) {
+        return new Promise((resolve, reject) => {
+            client.select(2, () => {
+                client.get(nombreUsuario, (err, result) => {
+                    if (err) {
+                        console.error('Error al obtener la clave:', err);
+                        reject(err);
+                    } else if (result === null) {
+                        console.log('El usuario no se encontró en la base de datos.');
+                        resolve(null); 
+                    } else {
+                        const evaluaciones = JSON.parse(result);
+                        const evaluacionBuscada = evaluaciones.find(evaluacion => evaluacion.nombreEvaluacion === nombreEvaluacion);
+                        if (evaluacionBuscada){
+                            resolve(evaluacionBuscada);
+                        } else {
+                            console.log('La evaluación no se encontró en la lista de evaluaciones.');
+                            resolve(null); 
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     //Metodo para ingresar el usuario, password y slat a Redis
     async loginUsuario(nombre, password) {
         
@@ -745,6 +776,37 @@ async agregarCursoDocente(usuario, curso) {
             console.error('Error al obtener los temas:', error);
             throw error;
         }
+    }
+
+    async agregarEstudianteACurso(id){
+        this.dbCassandra.execute('USE test');
+		const query = 'UPDATE curso SET estudiantes = estudiantes + ? WHERE id = ?';
+  		const params = [[this._user.getNombre()],id];
+        console.log("ID"+id);
+		this.dbCassandra.execute(query, params, { prepare: true }, function(err, result) {
+			if (err) {
+				console.error('Error al agregar estudiante', err);
+                return false;
+			} else {
+				console.log('Estudiante agregado');
+                //insertarCursoDocente()
+                return true;
+			}
+		});        
+    }
+
+    async getEstudiantesCurso(id){
+        const resultado = [];
+        const query = 'SELECT estudiantes FROM curso where id = ?';
+        const params = [id];
+        await this.dbCassandra.execute('USE test');
+        const result = await this.dbCassandra.execute(query, params, { prepare: true });
+        const listaResultado = result.rows[0].estudiantes;
+        listaResultado.forEach(nombre =>{
+            resultado.push(nombre)
+        })
+        console.log(resultado);
+        return resultado;    
     }
     
 

@@ -14,7 +14,6 @@
     justify-content: center;
 }
 
-/* helpers/grid.css */
 
 .grid {
     margin-left: auto;
@@ -24,7 +23,6 @@
     width: 90%;
 }
 
-/* helpers/hidden.css */
 
 .hidden {
     border: 0;
@@ -37,7 +35,6 @@
     width: 1px;
 }
 
-/* helpers/icon.css */
 
 .icons {
     display: none;
@@ -53,7 +50,6 @@
     width: 1em;
 }
 
-/* layout/base.css */
 
 * {
     -webkit-box-sizing: inherit;
@@ -80,7 +76,6 @@ body {
     min-height: 100vh;
 }
 
-/* modules/anchor.css */
 
 a {
     color: #eee;
@@ -93,7 +88,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* modules/form.css */
 
 input {
     background-image: none;
@@ -136,7 +130,6 @@ input[type='submit'] {
     flex: 1;
 }
 
-/* modules/login.css */
 
 .login {
     color: #eee;
@@ -207,7 +200,6 @@ input[type='submit'] {
     background-color: #2d9df8;
   }
 
-/* modules/text.css */
 
 p {
     margin-bottom: 24px;
