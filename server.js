@@ -89,19 +89,16 @@ app.post('/verify', async(req, res) => {
     console.log(username + " " + password);
     
     try {
-        const isMatch = controlador.verificar_usuario(username, password);
-
+        const isMatch = await controlador.verificar_usuario(username, password);
+        console.log(isMatch);
         if (isMatch) {
             res.redirect('index_main.html');
             controlador.obtenerUsuario(username);
         } else {
-            
-            res.send('Autenticación fallida');
+            res.redirect('index.html');
         }
     } catch (error) {
-        console.error(error);
-        
-        res.status(500).send('Error en la autenticación');
+        res.redirect('index.html');
     }
 
 });
@@ -203,19 +200,30 @@ app.get('/cargarCursos', async (req, res) => {
     const listaCursosMatriculados = await controlador.getCursosMatriculados(usuarioActual);
     //const listaCursosDocente = await controlador.getCursosDocente(usuarioActual);
     console.log(listaCursosMatriculados);
+    if(listaCursos == undefined) {}
+    else{
+        if(listaCursosMatriculados == undefined) {
+            listaCursos.forEach(async (nombreCurso, index) =>{   
+                temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="false" data-descripcion="${nombreCurso[4]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}">${nombreCurso[1]}</button>`;
+            });
+        }
+        else {
+            listaCursos.forEach((curso, index) =>{   
+                listaCursosMatriculados.forEach(cursoMatriculado =>{
+                    if(curso[0]==cursoMatriculado){
+                        curso.push('true');
+                    }
+                });
+                curso.push('false');    
+            });
 
-    listaCursos.forEach((curso, index) =>{   
-        listaCursosMatriculados.forEach(cursoMatriculado =>{
-            if(curso[0]==cursoMatriculado){
-                curso.push('true');
-            }
-        });
-        curso.push('false');    
-    });
+            listaCursos.forEach(async (nombreCurso, index) =>{   
+                console.log(nombreCurso[7]);
+                temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[7]}" data-descripcion="${nombreCurso[4]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}">${nombreCurso[1]}</button>`;
 
-    listaCursos.forEach(async (nombreCurso, index) =>{   
-        temp += `<button class="boton-curso" data-idCurso="${nombreCurso[0]}" data-nombre="${nombreCurso[1]}"data-codigo="${nombreCurso[2]}" onclick=mostrarInformacionCurso("${index}") data-profesor="${nombreCurso[3]}" data-matriculado="${nombreCurso[6]}" data-descripcion="${nombreCurso[4]}" data-fecha-inicio="${nombreCurso[5]}" data-fecha-final="${nombreCurso[6]}" id="${index}">${nombreCurso[1]}</button>`;
-    })
+            });
+        }
+    }
     res.send(temp);
 });
 
@@ -325,13 +333,12 @@ app.post('/registrarTema', upload.fields([
     { name: 'videos', maxCount: 1 },
     { name: 'imagenes', maxCount: 1 }
 ]), (req, res) => {
-    // Accede a los archivos subidos
+    const nombre = req.body.nombre;
     const texto = req.body.texto;
     const documento = req.files['documentos'][0].filename;
     const video = req.files['videos'][0].filename;
     const imagen = req.files['imagenes'][0].filename;
-    controlador.registrarTema(texto, documento, video, imagen);
-    //Resto del código para manejar el registro del tema
+    controlador.registrarTema(nombre, texto, documento, video, imagen, idCursoActual);
     res.redirect('curso.html');
 });
 
@@ -355,12 +362,13 @@ app.post('/guardar_evaluacion', async (req, res) => {
 });
 
 
-
-
-app.get('/cursoMatriculado', async (req, res) => {
-    const temas = await controlador.getTemas();
+app.get('/cargarTema', async (req, res) => {
+    const temas = await controlador.getTemas(idCursoActual);
+    console.log(temas);
+    res.send(temas);
 });
 
+app.use('/upload', express.static('upload'));
 
 app.listen(port, () => {
     console.log(`Servidor en ejecución en http://localhost:${port}`);

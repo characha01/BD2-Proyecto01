@@ -6,16 +6,19 @@ var cassandra = require('cassandra-driver');
 const { ObjectId } = require('mongodb');
 const Redis = require('ioredis');
 const bcrypt = require('bcrypt');
+const MongoClient = require('mongodb').MongoClient;
+var BSON = require('mongodb').BSONPure;
+
 
 const client = new Redis();
 function conectarMongo(){
-	mongoose.connect('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.6');
-	var dbMongo = mongoose.connection;
+	mongoose.connect('mongodb://127.0.0.1:27017');
+	const dbMongo = mongoose.connection;
 	dbMongo.on('error', console.error.bind(console, 'CONNECTION ERROR'));
 	dbMongo.once('open', function () {
 	console.log('Connected: Mongo');
 	});
-	return mongoose;   
+	return dbMongo;   
 }
 
 function conectarRedis(){
@@ -88,11 +91,11 @@ class Controller {
     constructor() {
         this._user = new Estudiante("", new Date(), "", "", -1, [], []);
         this.contador=0;
-        this.mongoose = conectarMongo();
+        this.dbMongo = conectarMongo();
         this.dbRedis = conectarRedis();
         this.dbCassandra = conectarCassandra();
         this.dbRaven = conectarRaven();
-        this.Documentos = new this.mongoose.Schema ({ruta : String});
+        this.Documentos = new mongoose.Schema ({ruta : String});
     }
     getUser() {
         return this._user;
@@ -312,7 +315,7 @@ async agregarCursoDocente(usuario, curso) {
 
     
       //Metodo para verificar que el password sea correcto
-    async  verificar_usuario(nombre, password) {
+    async verificar_usuario(nombre, password) {
         async function valid(nombre, password) {
           try {
             const storedHash = await getRedisValue(nombre, 0);
@@ -333,6 +336,7 @@ async agregarCursoDocente(usuario, curso) {
         }
         
         const isMatch = await valid(nombre, password);
+        console.log(isMatch);
         return isMatch;
     }
     //Metodo para ingresar el usuario, password y slat a Redis
@@ -375,32 +379,36 @@ async agregarCursoDocente(usuario, curso) {
     }
 
     async getPath(id) {
-        let data = new ObjectId(id);;
-        const Documento = this.mongoose.model("Documento",this.Documentos);
-        const object = new ObjectId(id);
-        async function getMongo(id){
-            try {
+        try {
+            const client = new MongoClient('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+            await client.connect();
+            const Documento = mongoose.model("Documento",this.Documentos);
+            const database = client.db("test");
+            const collection = database.collection("documentos");
+            //const objectId = new ObjectId(id);  
+            const documentos = await Documento.find({});
+            console.log(documentos);
+            documentos.forEach(documento =>{
+                console.log(documento._id.toString());
                 console.log(id);
-                data = await Documento.find({ _id: object }); // Filtra por la ruta
-                if (data) {
-                const path = data.ruta;
-                console.log('Datos obtenidos de MongoDB:', data._id);
-                return path;
-                } else {
-                console.log('Documento no encontrado en MongoDB');
-                }
-            } catch (error) {
-                console.error('Error al obtener datos de MongoDB:', error);
-            }
+                console.log('\\n');
+                if(documento._id == id){
+                    console.log("ENTRO")
+                    console.log(documento.path);
+                    return documento.path;
+                }          
+            })
+        } catch (error) {
+          console.error('Error al obtener datos de MongoDB:', error);
+        } finally {
         }
-        getMongo(id);
     }
     async registrarUsuario (username, password, full_name, birthdate, path, is_teacher) {
         if (password.length < 8) {
             return false;
         } else {
             this.loginUsuario(username,password);
-            const Documento = this.mongoose.model("Documento",this.Documentos);
+            const Documento = mongoose.model("Documento",this.Documentos);
             async function insertMongo(path) {
                 try{
                     const newData = new Documento({ruta : path});//mismo nombre del modelo
@@ -446,7 +454,7 @@ async agregarCursoDocente(usuario, curso) {
             password: password,
             full_name: full_name,
             birthdate: birthdate,
-            picture: data._id.toString(),
+            picture: data._id,
             is_teacher: is_teacher
             };
 
@@ -481,7 +489,7 @@ async agregarCursoDocente(usuario, curso) {
 	
 	async registrarCurso(codigo, descripcion, fechaFinal, fechaInicio, nombre, path){
         
-        const Documento = this.mongoose.model("Documento",this.Documentos);
+        const Documento = mongoose.model("Documento",this.Documentos);
         async function insertMongo(path) {
             try{
                 const newData = new Documento({ruta : path});//mismo nombre del modelo
@@ -524,7 +532,7 @@ async agregarCursoDocente(usuario, curso) {
                 return false;
 			} else {
 				console.log('Datos insertados exitosamente');
-                insertarCursoDocente()
+                //insertarCursoDocente()
                 return true;
 			}
 		});		
@@ -671,16 +679,18 @@ async agregarCursoDocente(usuario, curso) {
         return result.nombre;
     }
 
-    async registrarTema(texto, documentos, video, imagen) {
+    async registrarTema(nombre, texto, documentos, video, imagen, idCurso) {
         const { DocumentStore } = require('ravendb');
         const store = new DocumentStore('http://localhost:8080', 'Usuarios');
         store.initialize();
       
         const tema = {
+          nombre: nombre,
           texto: texto,
           documentos: documentos,
           videos: video,
-          imagenes: imagen
+          imagenes: imagen,
+          idCurso: idCurso
         };
       
         async function guardarTema(tema) {
@@ -708,27 +718,35 @@ async agregarCursoDocente(usuario, curso) {
         return true;
       }
 
-    async getTemas() {
+
+
+
+    async getTemas(idCurso) {
         const { DocumentStore } = require('ravendb');
         const store = new DocumentStore('http://localhost:8080', 'Usuarios');
         store.initialize();
 
         try {
             const session = store.openSession();
-    
-            const nombresTemas = await session.query({ collection: 'Temas' })
-                .selectFields('texto')
+
+            const temas = await session.query({ collection: 'Temas' })
+                .whereEquals('idCurso', idCurso)
                 .all();
-    
+
             session.dispose();
-    
-            // res.render('cursoMatriculado.html', { temas: nombresTemas });
-            return nombreTemas;
+
+            const temasFormateados = temas.map((tema) => {
+                const { idCurso, ...temaSinIdCurso } = tema;
+                return temaSinIdCurso;
+            });
+
+            return temasFormateados;
         } catch (error) {
-            console.error('Error al obtener los nombres de los temas:', error);
-            res.status(500).send('Error al obtener los nombres de los temas.');
+            console.error('Error al obtener los temas:', error);
+            throw error;
         }
     }
+    
 
     
 

@@ -121,7 +121,7 @@ opciones.forEach((opcion) => {
     selectTema.appendChild(option);
 }); */
 
-
+/*
 const temasComboBox = document.getElementById('temasComboBox');
 const temaTexto = document.getElementById('temaTexto');
 const temaDocumento = document.getElementById('temaDocumento');
@@ -153,3 +153,4 @@ function mostrarInformacionTema() {
 temasComboBox.addEventListener('change', mostrarInformacionTema);
 
 mostrarInformacionTema();
+*/

@@ -37,11 +37,14 @@
                     </div>
                     <div>
                         <label for="temaDocumento">Documento:</label>
-                        <a href="#" id="temaDocumento" download>Descargar Documento</a>
+                        <a id="temaDocumento" href="./upload/" + temaSeleccionado.documentos download>Descargar Documento</a>
                     </div>
                     <div>
                         <label for="temaVideo">Video:</label>
-                        <a href="#" id="temaVideo" target="_blank">Ver Video</a>
+                        <video id="temaVideo" controls>
+                            <source src="" type="video/mp4">
+                            Tu navegador no soporta la reproducción de videos.
+                        </video>
                     </div>
                     <div>
                         <label for="temaImagen">Imagen:</label>
@@ -68,7 +71,7 @@
                         </div>
                 </div>  
             </section>
-    <script src="curso.js"></script>
+    <script src="cursoMatriculado.js"></script>
     <script src="crear_evaluacion.js"></script>
 </body>
 </html>
